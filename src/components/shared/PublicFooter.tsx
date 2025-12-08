@@ -3,12 +3,12 @@ import Link from "next/link";
 
 const PublicFooter = () => {
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <footer className=" bg-background">
+      <div className="container mx-auto px-4 border-t py-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="">
-            <div className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Logo" className="rounded-full" width={40} height={40} />
+            <div className="flex items-center gap-x-1">
+              <Image src="/logo.png" alt="Logo" className="rounded-full border-2 border-gray-800/40 " width={40} height={40} />
 
               <h3 className="font-bold text-lg sm:text-xl text-green-800">Trip Guide</h3>
             </div>

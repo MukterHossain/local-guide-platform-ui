@@ -29,7 +29,7 @@ const PublicNavbar = async () => {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Logo" className="rounded-full" width={40} height={40} />
+            <Image src="/logo.png" alt="Logo" className="rounded-full border-2 border-gray-800/40" width={40} height={40} />
 
             <h3 className="font-bold text-lg sm:text-2xl text-green-800">Trip Guide</h3>
           </div>

@@ -1,12 +1,32 @@
-import { Button } from '@/components/ui/button';
+import BecomeGuideCTA from '@/components/modules/Home/BecomeGuideCTA';
+import Categories from '@/components/modules/Home/Categories';
+import FeaturedCities from '@/components/modules/Home/FeaturedCities';
+import Hero from '@/components/modules/Home/Hero';
+import HowItWorks from '@/components/modules/Home/HowItWorks';
+import PopularDestinations from '@/components/modules/Home/PopularDestinations';
+import Testimonials from '@/components/modules/Home/Testimonials';
+import TopGuides from '@/components/modules/Home/TopGuides';
+import Head from 'next/head';
 
 
 const HomePage = () => {
     return (
-        <div>
-            <h1>Home</h1>
-            <Button>Click Me</Button>
-        </div>
+        <>
+            <Head>
+                <title>Travel Guide Platform</title>
+                <meta name="description" content="Discover and book local guides worldwide." />
+            </Head>
+            <main className="flex flex-col gap-8">
+                <Hero />
+                <HowItWorks />
+                <PopularDestinations />
+                <FeaturedCities />
+                <TopGuides />
+                <Categories />
+                <Testimonials />
+                <BecomeGuideCTA />
+            </main>
+        </>
     );
 };
 
