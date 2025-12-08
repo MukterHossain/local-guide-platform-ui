@@ -49,11 +49,12 @@ const PublicNavbar = async () => {
           {/* {accessToken ? (
             <LogoutButton />
           ) : (
-            <Link href="/login">
+            
+          )} */}
+          <Link href="/login">
               <Button>Login</Button>
             </Link>
-          )} */}
-          login
+          
         </div>
       </div>
       {/* Mobile Navigation */}
