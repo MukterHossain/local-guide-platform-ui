@@ -7,34 +7,19 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { toast } from "sonner";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { registerUser } from "@/services/auth/registerUser";
-import { getAvailableLocation } from "@/services/guide/guideAvailableLoacation";
 
 
 const RegisterForm = () => {
   const [state, formAction, isPending] = useActionState(registerUser, null);
   const [role, setRole] = useState("TOURIST");
   console.log(state, "state");
-//  const {data} = getAvailableLocation()
-//  console.log("data Locaion", data)
 
-  // const getFieldError = (fieldName: string) => {
-  //   if (state && state.errors) {
-  //     const error = state.errors.find((err: any) => err.field === fieldName);
-  //     if (error) {
-  //       return error.message;
-  //     } else {
-  //       return null;
-  //     }
-  //   } else {
-  //     return null;
-  //   }
-  // };
-  //  useEffect(() => {
-  //   if (state && !state.success && state.message) {
-  //     toast.error(state.message);
-  //   }
-  // }, [state]);
-  const watchRole = ""
+   useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
+  
   return (
     <form action={formAction} >
       <FieldGroup>

@@ -35,14 +35,14 @@ const PublicFooter = () => {
           <div>
             <h3 className="font-semibold mb-2">Contact Us</h3>
             <p className="text-sm text-muted-foreground">
-              123 Medical Lane<br />
-              Health City, HC 12345<br />
+              123 Commercial Street<br />
+               Dhaka 1212<br />
               contact@phdoc.com
             </p>
           </div>
         </div>
         <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} PH Doc. All Rights Reserved.
+          &copy; {new Date().getFullYear()} Trip Guide. All Rights Reserved.
         </div>
       </div>
     </footer>

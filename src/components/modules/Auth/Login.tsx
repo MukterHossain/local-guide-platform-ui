@@ -23,11 +23,11 @@ export default function Login({ redirect }: { redirect?: string }) {
   //   }
   // };
   // console.log(state);
-  // useEffect(() => {
-  //   if (state && !state.success && state.message) {
-  //     toast.error(state.message || "Login failed. Please try again.");
-  //   }
-  // }, [state]);
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message || "Login failed. Please try again.");
+    }
+  }, [state]);
 
   return (
     <form action={formAction}>

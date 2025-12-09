@@ -1,29 +1,52 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-// import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
-
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Menu } from "lucide-react";
 import Image from "next/image";
+import { getCookie } from "@/services/auth/tokenHandlers";
+import LogoutButton from "./LogoutButton";
+import { getUserInfo } from "@/services/auth/getUserInfo";
+import { UserInfo } from "@/types/user.interface";
 
-// import checkAuthStatus from "@/utility/auth";
 
-// const { user } = await checkAuthStatus();
+
 const PublicNavbar = async () => {
-  // const { role } = user || { role: 'guest' };
-  // const {user} = UseUser()
-  //   const role = user?.role || 'guest';
+  const accessToken = await getCookie("accessToken");
+const userInfo = (await getUserInfo()) as UserInfo;
+const role = userInfo?.role || {};
+  console.log("user", userInfo)
+  console.log("role", role)
+const baseItems = [
+  { href: "/", label: "Home" },
+  { href: "/explore-tours", label: "Explore Tours" },
+];
 
-  // console.log("user", user)
-  const navItems = [
-    { href: "explore-tours", label: "Explore Tours" },
-    { href: "become-guide", label: "Become a Guide" },
+let navItems = [...baseItems];
+
+if (role === "TOURIST") {
+  navItems.push(
+    { href: "/my-bookings", label: "My Bookings" },
+    { href: "/profile", label: "Profile" }
+  );
+}
+
+if (role === "GUIDE") {
+  navItems.push(
+    { href: "/guide/dashboard", label: "Dashboard" },
+    { href: "/profile", label: "Profile" }
+  );
+}
+
+if (role === "ADMIN") {
+  navItems = [
+    { href: "/admin/dashboard", label: "Dashboard" },
+    { href: "/admin/users", label: "Manage Users" },
+    { href: "/admin/listings", label: "Manage Listings" },
+    { href: "/profile", label: "Profile" },
   ];
-  // if (role === 'ADMIN') {
-  //   navItems.push({ href: "/admin/dashboard", label: "Admin Dashboard" });
-  // }
-  // const accessToken = await getCookie("accessToken");
+}
+  
   return (
     <header className="sticky top-0 z-50 h-16 w-full  flex items-center justify-around bg-background/95 px-4 shadow-md gap-x-4 text-primary">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -46,14 +69,14 @@ const PublicNavbar = async () => {
           ))}
         </nav>
         <div className="hidden md:flex items-center space-x-2">
-          {/* {accessToken ? (
+          {accessToken ? (
             <LogoutButton />
           ) : (
-            
-          )} */}
-          <Link href="/login">
+            <Link href="/login">
               <Button>Login</Button>
             </Link>
+          )}
+          
           
         </div>
       </div>
@@ -77,14 +100,13 @@ const PublicNavbar = async () => {
               ))}
               <div className="border-t pt-4 flex flex-col space-y-4">
                 <div className="flex justify-center"></div>
-                {/* {accessToken ? (
+                {accessToken ? (
                   <LogoutButton />
                 ) : (
                   <Link href="/login">
                     <Button>Login</Button>
                   </Link>
-                )} */}
-                login
+                )}
               </div>
             </nav>
           </SheetContent>
