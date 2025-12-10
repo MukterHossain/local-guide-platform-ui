@@ -8,20 +8,12 @@ const serverFetchHelper = async (endpoint: string, options: RequestInit): Promis
     const { headers, ...restOptions } = options;
     const accessToken = await getCookie("accessToken");
 
-    //to stop recursion loop
-    // if (endpoint !== "/auth/refresh-token") {
-    //     await getNewAccessToken();
-    // }
-    
     const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
         headers: {
             Cookie: accessToken ? `accessToken=${accessToken}` : "",
             ...headers,
             body: JSON.stringify(options.body),
-            // ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
-            // ...(accessToken ? { "Authorization": accessToken } : {}),
-
-        },
+      },
         ...restOptions,
     })
 
@@ -40,9 +32,3 @@ export const serverFetch = {
     delete: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "DELETE" }),
 
 }
-
-/**
- * 
- * serverFetch.get("/auth/me")
- * serverFetch.post("/auth/login", { body: JSON.stringify({}) })
- */

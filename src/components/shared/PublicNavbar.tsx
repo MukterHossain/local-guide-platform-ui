@@ -15,37 +15,45 @@ const PublicNavbar = async () => {
   const accessToken = await getCookie("accessToken");
 const userInfo = (await getUserInfo()) as UserInfo;
 const role = userInfo?.role || {};
-  console.log("user", userInfo)
-  console.log("role", role)
+  // console.log("user", userInfo)
+  // console.log("role", role)
 const baseItems = [
-  { href: "/", label: "Home" },
   { href: "/explore-tours", label: "Explore Tours" },
+  { href: "/become-guide", label: "Become a Guide" },
 ];
 
-let navItems = [...baseItems];
+let navItems: { href: string; label: string }[] = [];
 
-if (role === "TOURIST") {
-  navItems.push(
+
+if (!accessToken) {
+  navItems = [...baseItems];
+}else{
+  if (role === "TOURIST") {
+  navItems =[
     { href: "/my-bookings", label: "My Bookings" },
     { href: "/profile", label: "Profile" }
-  );
+  ]
 }
 
 if (role === "GUIDE") {
-  navItems.push(
-    { href: "/guide/dashboard", label: "Dashboard" },
+  navItems= [
+    { href: "/explore-tours", label: "Explore Tours" },
+     { href: "/guide/dashboard", label: "Dashboard" },
     { href: "/profile", label: "Profile" }
-  );
+  ];
 }
 
 if (role === "ADMIN") {
   navItems = [
-    { href: "/admin/dashboard", label: "Dashboard" },
+    { href: "/admin/dashboard", label: "Admin Dashboard" },
     { href: "/admin/users", label: "Manage Users" },
     { href: "/admin/listings", label: "Manage Listings" },
     { href: "/profile", label: "Profile" },
   ];
 }
+}
+
+
   
   return (
     <header className="sticky top-0 z-50 h-16 w-full  flex items-center justify-around bg-background/95 px-4 shadow-md gap-x-4 text-primary">

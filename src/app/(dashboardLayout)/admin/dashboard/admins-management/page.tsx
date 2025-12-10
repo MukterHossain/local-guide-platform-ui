@@ -1,5 +1,6 @@
+import LocationManagementHeader from "@/components/modules/Admin/LocationManagement/LocationManagementHeader";
 
-const AdminAdminsManagementPage = async ({
+const AdminsManagementPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -8,7 +9,7 @@ const AdminAdminsManagementPage = async ({
 
   return (
     <div className="space-y-6">
-      
+      <LocationManagementHeader></LocationManagementHeader>
   <h1>Admins Management</h1>
       {/* Search, Filters */}
       
@@ -16,4 +17,4 @@ const AdminAdminsManagementPage = async ({
   );
 };
 
-export default AdminAdminsManagementPage;
+export default AdminsManagementPage;
