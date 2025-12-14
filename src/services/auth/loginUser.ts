@@ -103,19 +103,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
         if (!result.success) {
             throw new Error(result.message || "Login failed");
         }
-          // new code 11/22
-        // if (redirectTo && result.data.needPasswordChange) {
-        //     const requestedPath = redirectTo.toString();
-        //     if (isValidRedirectForRole(requestedPath, userRole)) {
-        //         redirect(`/reset-password?redirect=${requestedPath}`);
-        //     } else {
-        //         redirect("/reset-password");
-        //     }
-        // }
 
-        // if (result.data.needPasswordChange) {
-        //     redirect("/reset-password");
-        // }
         if (redirectTo) {
             const requestedPath = redirectTo.toString();
             if (isValidRedirectForRole(requestedPath, userRole)) {

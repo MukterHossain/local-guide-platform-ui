@@ -13,12 +13,6 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
                     icon: "LayoutDashboard",
                     roles: ["TOURIST", "GUIDE", "ADMIN"],
                 },
-                {
-                    title: "My Profile",
-                    href: `/my-profile`,
-                    icon: "User",
-                    roles: ["TOURIST", "GUIDE", "ADMIN"],
-                },
 
             ]
         },
@@ -29,7 +23,7 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
                     title: "Change Password",
                     href: "/change-password",
                     icon: "Settings", // ✅ String
-                    roles: ["TOURIST"],
+                    roles: ["TOURIST" , "GUIDE", "ADMIN"],
                 },
             ],
         },
@@ -37,6 +31,16 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
 }
 
 export const guideNavItems: NavSection[] = [
+      {
+        items: [
+            {
+                title: "Guide Profile",
+                href: "/guide/dashboard/my-profile",
+                icon: "User",
+                roles: ["GUIDE"],
+            },
+        ],
+    },
     {
         title: "Tour Management",
         items: [
@@ -53,17 +57,22 @@ export const guideNavItems: NavSection[] = [
                 icon: "MapPin",
                 roles: ["GUIDE"],
             },
-            {
-                title: "My Profile",
-                href: "/guide/dashboard/my-profile",
-                icon: "User",
-                roles: ["GUIDE"],
-            },
+            
         ],
     }
 ]
 
 export const touristNavItems: NavSection[] = [
+     {
+        items: [
+            {
+                title: "Tourist Profile",
+                href: "/tourist/dashboard/my-profile",
+                icon: "User",
+                roles: ["TOURIST"],
+            },
+        ],
+    },
     {
         title: "Tour Management",
         items: [
@@ -85,14 +94,19 @@ export const touristNavItems: NavSection[] = [
 
 export const adminNavItems: NavSection[] = [
     {
-        title: "User Management",
+        
         items: [
             {
-                title: "Admins",
-                href: "/admin/dashboard/admins-management",
-                icon: "Shield",
+                title: "Admin Profile",
+                href: "/admin/dashboard/admin-profile",
+                icon: "Users",
                 roles: ["ADMIN"],
             },
+        ],
+    },
+    {
+        title: "User Management",
+        items: [
             {
                 title: "Guides",
                 href: "/admin/dashboard/guides-management",

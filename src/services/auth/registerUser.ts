@@ -17,6 +17,8 @@ export const registerUser = async (_currentState: any, formData: any): Promise<a
     const basePayload: any = {
       name: formData.get('name'),
       email: formData.get('email'),
+      gender: formData.get('gender'),
+       languages: formData.get('languages')?.split(",").map((l: any) => l.trim()),
       phone: formData.get('phone'),
       address: formData.get('address'),
       password: formData.get('password'),
@@ -27,8 +29,7 @@ export const registerUser = async (_currentState: any, formData: any): Promise<a
 
     if (role === "GUIDE") {
       basePayload.profile = {
-        bio: formData.get('bio'),
-        languages: formData.get('languages')?.split(",").map((l: any) => l.trim()),
+        expertise: formData.get('expertise') || "",
         experienceYears: Number(formData.get('experienceYears')),
         feePerHour: Number(formData.get('feePerHour')),
         locationId: formData.get('locationId') || null,

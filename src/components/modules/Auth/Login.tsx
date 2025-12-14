@@ -13,16 +13,7 @@ export default function Login({ redirect }: { redirect?: string }) {
 
   const [state, formAction, isPending] = useActionState(loginUser, null);
   console.log("state", state)
-  // const getFieldError = (fieldName: string) => {
-  //   // toast.error("Login failed. Please try again.");
-  //   if (state && state.errors) {
-  //     const error = state.errors.find((err: any) => err.field === fieldName);
-  //     return error?.message;
-  //   } else {
-  //     return null;
-  //   }
-  // };
-  // console.log(state);
+
   useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message || "Login failed. Please try again.");
@@ -42,7 +33,6 @@ export default function Login({ redirect }: { redirect?: string }) {
               name="email"
               type="email"
               placeholder="m@example.com"
-            //   required
             />
             <InputFieldError field="email" state={state} />
           </Field>
@@ -55,7 +45,6 @@ export default function Login({ redirect }: { redirect?: string }) {
               name="password"
               type="password"
               placeholder="Enter your password"
-            //   required
             />
             <InputFieldError field="password" state={state} />
           </Field>
