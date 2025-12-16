@@ -48,7 +48,7 @@ if (role === "ADMIN") {
     { href: "/admin/dashboard", label: "Admin Dashboard" },
     { href: "/admin/users", label: "Manage Users" },
     { href: "/admin/listings", label: "Manage Listings" },
-    { href: "/profile", label: "Profile" },
+    { href: "/admin/dashboard/admin-profile", label: "Profile" },
   ];
 }
 }
