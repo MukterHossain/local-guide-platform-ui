@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import InputFieldError from "@/components/shared/InputFieldError";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,9 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { createLocation } from "@/services/admin/locationManagement";
-import { useActionState, useEffect, useRef } from "react";
+import { createGuideLocation, getLocationForGuideLocation } from "@/services/guide/guideAvailableLoacation";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 
@@ -18,17 +18,19 @@ interface IGuideLocationFormDialogProps {
   onClose: () => void;
   onSuccess: () => void;
 }
+
 const GuideLocationFormDialog = ({
   open,
   onClose,
   onSuccess,
 }: IGuideLocationFormDialogProps) => {
-    const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, isPending] = useActionState(createLocation, null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, formAction, isPending] = useActionState(createGuideLocation, null);
+  const [locations, setLocations] = useState<any[]>([]);
 
   useEffect(() => {
     if (state?.success) {
-      toast.success(state.message || "Location created successfully");
+      toast.success(state.message || "Guide Location created successfully");
       if (formRef.current) {
         formRef.current.reset();
       }
@@ -39,15 +41,29 @@ const GuideLocationFormDialog = ({
     }
   }, [state, onSuccess, onClose]);
 
+
+  useEffect(() => {
+    async function fetchLocations() {
+      const res = await getLocationForGuideLocation();
+      if (res?.success) {
+        setLocations(res.data);
+      }
+    }
+    fetchLocations();
+  }, []);
+
   const handleClose = () => {
     formRef.current?.reset();
     onClose();
   };
-    return (
-        <Dialog open={open} onOpenChange={handleClose}>
+
+
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle>Create Location</DialogTitle>
+          <DialogTitle> Create Guide Location</DialogTitle>
         </DialogHeader>
 
         <form
@@ -56,29 +72,36 @@ const GuideLocationFormDialog = ({
           className="flex flex-col flex-1 min-h-0"
         >
           <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
-            {/* City */}
+            {/* Location */}
             <Field>
-              <FieldLabel htmlFor="city">City</FieldLabel>
-              <Input
-                id="city"
-                name="city"
-                type="text"
-                defaultValue={state?.formData?.city || ""}
-              />
-              <InputFieldError field="city" state={state} />
-            </Field>
+              <FieldLabel htmlFor="locationId">Location</FieldLabel>
+              <select
+                name="locationId"
+                className="border text-black rounded p-2 w-full"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select location
+                </option>
 
-            {/* Country */}
-            <Field>
-              <FieldLabel htmlFor="country">Country</FieldLabel>
-              <Input
-                id="country"
-                name="country"
-                type="text"
-                defaultValue={state?.formData?.country || ""}
-              />
-              <InputFieldError field="country" state={state} />
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.city}
+                  </option>
+                ))}
+              </select>
+
+              <InputFieldError field="locationId" state={state} />
             </Field>
+            {/* Tour
+            <Field>
+              <FieldLabel htmlFor="guideId">Guide Id</FieldLabel>
+              <select name="guideId"
+                className="border rounded p-2">
+                <option value=""></option>
+              </select>
+              <InputFieldError field="guideId" state={state} />
+            </Field> */}
 
           </div>
 
@@ -93,13 +116,13 @@ const GuideLocationFormDialog = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create Location"}
+              {isPending ? "Creating..." : "Create Guide Location"}
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-    );
+  );
 };
 
 export default GuideLocationFormDialog;

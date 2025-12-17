@@ -1,20 +1,32 @@
 "use client";
 
 import { Column } from "@/components/shared/ManagementTable";
+import { IGuideLocation } from "@/types/guideLocation.interface";
 
-import { ILocation } from "@/types/location.interface";
 
 
-export const GuideLocationColumns: Column<ILocation>[] = [
+export const GuideLocationColumns: Column<IGuideLocation>[] = [
   {
     header: "City",
-    accessor: (location) => location.city,
+    accessor: (GuideLoca) => GuideLoca.location.city,
     sortKey: "locationName",
   },
   {
     header: "Country",
-    accessor: (location) => location.country,
+    accessor: (GuideLoca) => GuideLoca.location.country,
     sortKey: "country",
+  },
+  
+  {
+    header: "Guide",
+    accessor: (GuideLoca) => GuideLoca.guide.name,
+    sortKey: "guideName",
+  },
+
+  {
+    header: "Created At",
+    accessor: (GuideLoca) => GuideLoca.createdAt.slice(0, 10),
+    sortKey: "createdAt",
   },
   
 ];

@@ -1,7 +1,5 @@
 
 "use client"
-import { ILocation } from "@/types/location.interface";
-
 import DeleteConfirmationDialog from "@/components/shared/DeleteConfirmationDialog";
 import ManagementTable from "@/components/shared/ManagementTable";
 
@@ -10,15 +8,16 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { deleteLocation } from "@/services/admin/locationManagement";
 import { GuideLocationColumns } from "./GuideLocationColumns";
+import { IGuideLocation } from "@/types/guideLocation.interface";
 
-interface GiodeLocationTableProps {
-  locations: ILocation[];
+interface GuideLocationTableProps {
+  guideLocations: IGuideLocation[];
 }
 
-const GuideLocationTable = ({locations}: GiodeLocationTableProps) => {
+const GuideLocationTable = ({guideLocations}: GuideLocationTableProps) => {
      const router = useRouter();
   const [, startTransition] = useTransition();
-  const [deletingLocation, setDeletingLocation] = useState<ILocation | null>(
+  const [deletingLocation, setDeletingLocation] = useState<IGuideLocation | null>(
     null
   );
   const [isDeleting, setIsDeleting] = useState(false);
@@ -29,8 +28,8 @@ const GuideLocationTable = ({locations}: GiodeLocationTableProps) => {
     });
   };
 
-  const handleDelete = (location: ILocation) => {
-    setDeletingLocation(location);
+  const handleDelete = (guideLocations: IGuideLocation) => {
+    setDeletingLocation(guideLocations);
   };
 
   const confirmDelete = async () => {
@@ -41,17 +40,17 @@ const GuideLocationTable = ({locations}: GiodeLocationTableProps) => {
     setIsDeleting(false);
 
     if (result.success) {
-      toast.success(result.message || "Schedule deleted successfully");
+      toast.success(result.message || "Guide deleted successfully");
       setDeletingLocation(null);
       handleRefresh();
     } else {
-      toast.error(result.message || "Failed to delete schedule");
+      toast.error(result.message || "Failed to delete guide");
     }
   };
     return (
          <>
       <ManagementTable
-        data={locations}
+        data={guideLocations}
         columns={GuideLocationColumns}
         onDelete={handleDelete}
         getRowKey={(schedule) => schedule.id!}

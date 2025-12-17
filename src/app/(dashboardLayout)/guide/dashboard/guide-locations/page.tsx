@@ -4,7 +4,7 @@ import GuideLocationTable from "@/components/modules/Guide/GuideLocatilonManagem
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getLocations } from "@/services/admin/locationManagement";
+import { getGuideLocation } from "@/services/guide/guideAvailableLoacation";
 import { Suspense } from "react";
 
 const GuideLocationPage = async ({
@@ -15,19 +15,21 @@ const GuideLocationPage = async ({
       const searchParamsObj = await searchParams;
 
   const queryString = queryStringFormatter(searchParamsObj);
-  const locationsResult = await getLocations(queryString);
+  const guideLocationsResult = await getGuideLocation(queryString);
   const totalPages = Math.ceil(
-    (locationsResult?.meta?.total || 1) / (locationsResult?.meta?.limit || 1)
+    (guideLocationsResult?.meta?.total || 1) / (guideLocationsResult?.meta?.limit || 1)
   );
+
+  console.log("guideLocationsResult", guideLocationsResult);
     return (
         <div>
             <GuideLocationManagementHeader/>
             <GuideLocationFilter/>
             <Suspense fallback={<TableSkeleton columns={4} rows={10} />}>
         {/* <SchedulesTable schedules={schedulesResult?.data || []} /> */}
-        <GuideLocationTable locations={locationsResult?.data || []} />
+        <GuideLocationTable guideLocations={guideLocationsResult?.data || []} />
         <TablePagination
-          currentPage={locationsResult?.meta?.page || 1}
+          currentPage={guideLocationsResult?.meta?.page || 1}
           totalPages={totalPages || 1}
         />
       </Suspense>

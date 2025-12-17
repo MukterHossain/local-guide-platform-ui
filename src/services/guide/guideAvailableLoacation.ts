@@ -3,61 +3,63 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
+import { createGuideLocationSchema } from "@/zod/guideLocation.validation";
 import { updateGuideProfileSchema, updateTouristAdminSchema } from "@/zod/user.validation";
 
 
-// export async function createLocation(_prevState: any, formData: FormData) {
-//     // Build validation payload
-//     const validationPayload = {
-//         city: formData.get("city") as string,
-//         country: formData.get("country") as string,
-//     };
+export async function createGuideLocation(_prevState: any, formData: FormData) {
+    // Build validation payload
+    const validationPayload = {
+        locationId: formData.get("locationId") as string,
+        // guideId: formData.get("guideId") as string,
+
+    };
 
 
 
-//     const validation = zodValidator(validationPayload, createLocationSchema);
+    const validation = zodValidator(validationPayload, createGuideLocationSchema);
 
-//     if (!validation.success && validation.errors) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//             formData: validationPayload,
-//             errors: validation.errors,
-//         }
-//     }
-
-
-//     if (!validation.data) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//             formData: validationPayload,
-//         }
-//     }
-
-//     try {
-//         const response = await serverFetch.post("/location", {
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(validation.data),
-//         });
-
-//         const result = await response.json();
-//         return result;
-//     } catch (error: any) {
-//         console.error("Create location error:", error);
-//         return {
-//             success: false,
-//             message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create location',
-//             formData: validationPayload
-//         };
-//     }
-// }
+    if (!validation.success && validation.errors) {
+        return {
+            success: false,
+            message: "Validation failed",
+            formData: validationPayload,
+            errors: validation.errors,
+        }
+    }
 
 
+    if (!validation.data) {
+        return {
+            success: false,
+            message: "Validation failed",
+            formData: validationPayload,
+        }
+    }
 
-export async function getGuides(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/user/guides${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.post("/guideLocation", {
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(validation.data),
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Create guide location error:", error);
+        return {
+            success: false,
+            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create location',
+            formData: validationPayload
+        };
+    }
+}
+
+
+
+export async function getLocationForGuideLocation(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/location${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -68,9 +70,22 @@ export async function getGuides(queryString?: string) {
         };
     }
 }
-export async function getTourists(queryString?: string) {
+export async function getTourForGuideLocation(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/user/tourists${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.get(`/listings${queryString ? `?${queryString}` : ""}`);
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
+export async function getGuideLocation(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/guideLocation${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -99,19 +114,19 @@ export async function getUserById(id: string) {
 export async function updateGuideProfile(_prevState: any, formData: FormData) {
     // Build validation payload
     const payload = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      gender: formData.get("gender"),
-      address: formData.get("address"),
-      availableStatus: formData.get("availableStatus"),
-      bio: formData.get("bio"),
-      languages: formData.get("languages")?.toString()?.split(",") || [],
-      profile: {
-        expertise: formData.get("expertise"),
-        experienceYears: Number(formData.get("experienceYears")),
-        feePerHour: Number(formData.get("feePerHour")),
-        locationId: formData.get("locationId"),
-      },
+        name: formData.get("name"),
+        phone: formData.get("phone"),
+        gender: formData.get("gender"),
+        address: formData.get("address"),
+        availableStatus: formData.get("availableStatus"),
+        bio: formData.get("bio"),
+        languages: formData.get("languages")?.toString()?.split(",") || [],
+        profile: {
+            expertise: formData.get("expertise"),
+            experienceYears: Number(formData.get("experienceYears")),
+            feePerHour: Number(formData.get("feePerHour")),
+            locationId: formData.get("locationId"),
+        },
     };
 
     const fd = new FormData();
@@ -119,7 +134,7 @@ export async function updateGuideProfile(_prevState: any, formData: FormData) {
 
     const selectedFile = formData.get("file") as File | null;
     if (selectedFile) {
-      fd.append("file", selectedFile);
+        fd.append("file", selectedFile);
     }
 
     const validationPayload = {
@@ -138,7 +153,7 @@ export async function updateGuideProfile(_prevState: any, formData: FormData) {
         },
         file: selectedFile,
     };
-  
+
 
 
 
