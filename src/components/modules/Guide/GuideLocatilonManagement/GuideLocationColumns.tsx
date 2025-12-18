@@ -9,18 +9,18 @@ export const GuideLocationColumns: Column<IGuideLocation>[] = [
   {
     header: "City",
     accessor: (GuideLoca) => GuideLoca.location.city,
-    sortKey: "locationName",
+
   },
   {
     header: "Country",
     accessor: (GuideLoca) => GuideLoca.location.country,
-    sortKey: "country",
+
   },
   
   {
     header: "Guide",
     accessor: (GuideLoca) => GuideLoca.guide.name,
-    sortKey: "guideName",
+    
   },
 
   {

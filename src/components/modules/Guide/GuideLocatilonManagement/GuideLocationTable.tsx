@@ -6,9 +6,9 @@ import ManagementTable from "@/components/shared/ManagementTable";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { deleteLocation } from "@/services/admin/locationManagement";
 import { GuideLocationColumns } from "./GuideLocationColumns";
 import { IGuideLocation } from "@/types/guideLocation.interface";
+import { deleteGuideLacation } from "@/services/guide/guideAvailableLoacation";
 
 interface GuideLocationTableProps {
   guideLocations: IGuideLocation[];
@@ -17,7 +17,7 @@ interface GuideLocationTableProps {
 const GuideLocationTable = ({guideLocations}: GuideLocationTableProps) => {
      const router = useRouter();
   const [, startTransition] = useTransition();
-  const [deletingLocation, setDeletingLocation] = useState<IGuideLocation | null>(
+  const [deletingGuideLocation, setDeletingGuideLocation] = useState<IGuideLocation | null>(
     null
   );
   const [isDeleting, setIsDeleting] = useState(false);
@@ -29,19 +29,19 @@ const GuideLocationTable = ({guideLocations}: GuideLocationTableProps) => {
   };
 
   const handleDelete = (guideLocations: IGuideLocation) => {
-    setDeletingLocation(guideLocations);
+    setDeletingGuideLocation(guideLocations);
   };
 
   const confirmDelete = async () => {
-    if (!deletingLocation) return;
+    if (!deletingGuideLocation) return;
 
     setIsDeleting(true);
-    const result = await deleteLocation(deletingLocation.id!);
+    const result = await deleteGuideLacation(deletingGuideLocation.id!);
     setIsDeleting(false);
 
     if (result.success) {
-      toast.success(result.message || "Guide deleted successfully");
-      setDeletingLocation(null);
+      toast.success(result.message || "Guide Location deleted successfully");
+      setDeletingGuideLocation(null);
       handleRefresh();
     } else {
       toast.error(result.message || "Failed to delete guide");
@@ -54,16 +54,16 @@ const GuideLocationTable = ({guideLocations}: GuideLocationTableProps) => {
         columns={GuideLocationColumns}
         onDelete={handleDelete}
         getRowKey={(schedule) => schedule.id!}
-        emptyMessage="No schedules found"
+        emptyMessage="No Guide Location found"
       />
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
-        open={!!deletingLocation}
-        onOpenChange={(open) => !open && setDeletingLocation(null)}
+        open={!!deletingGuideLocation}
+        onOpenChange={(open) => !open && setDeletingGuideLocation(null)}
         onConfirm={confirmDelete}
-        title="Delete Location"
-        description={`Are you sure you want to delete this location? This action cannot be undone.`}
+        title="Delete Guide Location"
+        description={`Are you sure you want to delete this guide location? This action cannot be undone.`}
         isDeleting={isDeleting}
       />
     </>

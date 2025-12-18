@@ -93,15 +93,6 @@ const GuideLocationFormDialog = ({
 
               <InputFieldError field="locationId" state={state} />
             </Field>
-            {/* Tour
-            <Field>
-              <FieldLabel htmlFor="guideId">Guide Id</FieldLabel>
-              <select name="guideId"
-                className="border rounded p-2">
-                <option value=""></option>
-              </select>
-              <InputFieldError field="guideId" state={state} />
-            </Field> */}
 
           </div>
 
