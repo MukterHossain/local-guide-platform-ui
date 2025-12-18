@@ -52,22 +52,20 @@ export const updateTouristAdminSchema = z.object({
 });
 
 export const updateGuideProfileSchema = z.object({
-   name: z.string().optional(),
-    phone: z.string().optional(),
-    image: z.string().optional(),
-    address: z.string().optional(),
-    availableStatus: z.boolean().optional(),
-    bio: z.string().optional(),
-    languages: z.array(z.string()).optional(),
-    role: z.enum(["TOURIST", "GUIDE"]).default("TOURIST").optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  image: z.string().optional(),
+  address: z.string().optional(),
+  bio: z.string().optional(),
+  languages: z.array(z.string()).optional(),
 
   profile: z.object({
     expertise: z.string().optional(),
     experienceYears: z.number().optional(),
-    locationId: z.string().optional(),
-    availableStatus: z.boolean().optional(),
     feePerHour: z.number().optional(),
-  }).optional()
+    availableStatus: z.boolean().optional(),
+    locationId: z.string().optional(),
+  }).optional(),
 });
 
 

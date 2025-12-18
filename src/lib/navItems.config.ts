@@ -34,7 +34,7 @@ export const guideNavItems: NavSection[] = [
       {
         items: [
             {
-                title: "Guide Profile",
+                title: "My Profile",
                 href: "/guide/dashboard/my-profile",
                 icon: "User",
                 roles: ["GUIDE"],

@@ -3,7 +3,7 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { adminUpdateGuideStatus, adminUpdateTouristStatus, updateAdminSchema, updateGuideProfileSchema } from "@/zod/user.validation";
+import { adminUpdateGuideStatus, adminUpdateTouristStatus, updateAdminSchema} from "@/zod/user.validation";
 
 
 
@@ -65,89 +65,7 @@ export async function getUserById(id: string) {
     }
 }
 
-export async function updateGuideProfile(_prevState: any, formData: FormData) {
-    // Build validation payload
-    const payload = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      gender: formData.get("gender"),
-      address: formData.get("address"),
-      availableStatus: formData.get("availableStatus"),
-      bio: formData.get("bio"),
-      languages: formData.get("languages")?.toString()?.split(",") || [],
-      profile: {
-        expertise: formData.get("expertise"),
-        experienceYears: Number(formData.get("experienceYears")),
-        feePerHour: Number(formData.get("feePerHour")),
-        locationId: formData.get("locationId"),
-      },
-    };
 
-    const fd = new FormData();
-    fd.append("data", JSON.stringify(payload));
-
-    const selectedFile = formData.get("file") as File | null;
-    if (selectedFile) {
-      fd.append("file", selectedFile);
-    }
-
-    const validationPayload = {
-        name: formData.get("name") as string,
-        phone: formData.get("phone") as string,
-        gender: formData.get("gender") as string,
-        address: formData.get("address") as string,
-        availableStatus: formData.get("availableStatus") as string,
-        bio: formData.get("bio") as string,
-        languages: formData.get("languages")?.toString()?.split(",") || [],
-        profile: {
-            expertise: formData.get("expertise") as string,
-            experienceYears: Number(formData.get("experienceYears")) as number,
-            feePerHour: Number(formData.get("feePerHour")) as number,
-            locationId: formData.get("locationId") as string,
-        },
-        file: selectedFile,
-    };
-  
-
-
-
-    const validation = zodValidator(validationPayload, updateGuideProfileSchema);
-
-    if (!validation.success && validation.errors) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-            errors: validation.errors,
-        }
-    }
-
-
-    if (!validation.data) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-        }
-    }
-
-    try {
-        const response = await serverFetch.patch(`/user/update-profile`, {
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(validation.data),
-        });
-
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Create location error:", error);
-        return {
-            success: false,
-            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to update Profile',
-            formData: validationPayload
-        };
-    }
-}
 export async function updateAdminProfile(_prevState: any, formData: FormData) {
     // Build validation payload
     const payload = {
