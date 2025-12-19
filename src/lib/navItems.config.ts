@@ -88,6 +88,12 @@ export const touristNavItems: NavSection[] = [
                 icon: "File", // ✅ String
                 roles: ["TOURIST"],
             },
+            {
+                title: "Explore Tours",
+                href: "/explore-tours",
+                icon:  "Plane", 
+                roles: ["TOURIST"],
+            },
         ],
     },
 ]

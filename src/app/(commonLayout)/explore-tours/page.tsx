@@ -1,9 +1,9 @@
-import React from 'react';
+import ExploreTours from '@/components/modules/Common/ExploreTours/ExploreTours';
 
 const ExploreToursPage = () => {
     return (
         <div>
-            <h1>Explore Tours</h1>
+            <ExploreTours/>
         </div>
     );
 };

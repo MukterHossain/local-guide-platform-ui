@@ -8,14 +8,14 @@ export interface IBooking {
   userId: string;
   availabilityId: string;
 
-  bookingDate: string | Date; // API → string, DB → Date
+  bookingDate: string | Date;
   status: BookingStatus;
 
   totalFee: number;
   paymentStatus: PaymentStatus;
 
-//   createdAt: string | Date;
-//   updatedAt: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 
 //   // Optional populated relations
 //   tour?: Tour;

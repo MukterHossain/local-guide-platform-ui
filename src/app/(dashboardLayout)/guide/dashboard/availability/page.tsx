@@ -4,7 +4,7 @@ import AvailabilityTable from "@/components/modules/Guide/AvailabilityManagement
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getAvailableLocations } from "@/services/guide/guideAvailable";
+import { getAvailables } from "@/services/guide/guideAvailable";
 import { Suspense } from "react";
 
 const AvailabiltyPage = async ({
@@ -15,7 +15,7 @@ const AvailabiltyPage = async ({
     const searchParamsObj = await searchParams;
 
     const queryString = queryStringFormatter(searchParamsObj);
-    const availableResult = await getAvailableLocations(queryString);
+    const availableResult = await getAvailables(queryString);
     const totalPages = Math.ceil(
         (availableResult?.meta?.total || 1) / (availableResult?.meta?.limit || 1)
     );

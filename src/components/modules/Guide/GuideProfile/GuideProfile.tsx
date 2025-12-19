@@ -138,6 +138,7 @@ const GuideProfile = ({ guide }: Props) => {
                             onChange={handleFileChange}
                         />
                     </Field>
+                    
                     {/* Guide Profile */}
                     {guide?.profile && (
                         <div>

@@ -55,9 +55,9 @@ export async function createAvailability(_prevState: any, formData: FormData) {
 
 
 
-export async function getAvailableLocations(queryString?: string) {
+export async function getAvailables(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/availability${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.get(`/availability/me${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -68,6 +68,7 @@ export async function getAvailableLocations(queryString?: string) {
         };
     }
 }
+
 
 
 

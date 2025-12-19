@@ -30,8 +30,10 @@ if (!accessToken) {
 }else{
   if (role === "TOURIST") {
   navItems =[
+    { href: "/explore-tours", label: "Explore Tours" },
     { href: "/my-bookings", label: "My Bookings" },
-    { href: "/profile", label: "Profile" }
+    { href: "/profile", label: "Profile" },
+    { href: "/dashboard", label: "Dashboard" }
   ]
 }
 
@@ -39,7 +41,7 @@ if (role === "GUIDE") {
   navItems= [
     { href: "/explore-tours", label: "Explore Tours" },
      { href: "/guide/dashboard", label: "Dashboard" },
-    { href: "/profile", label: "Profile" }
+    { href: "/guide/dashboard/my-profile", label: "Profile" }
   ];
 }
 

@@ -1,4 +1,4 @@
-import GuideProfile from "@/components/modules/Guide/GuideProfile";
+import GuideProfile from "@/components/modules/Guide/GuideProfile/GuideProfile";
 import { queryStringFormatter } from "@/lib/formatters";
 import { getGuide } from "@/services/guide/guideManagement";
 

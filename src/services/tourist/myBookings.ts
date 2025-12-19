@@ -3,20 +3,19 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { createGuideLocationSchema } from "@/zod/guideLocation.validation";
+import { createAvailabilitySchema } from "@/zod/availability.validation";
 
 
-export async function createGuideLocation(_prevState: any, formData: FormData) {
+export async function createBooking(_prevState: any, formData: FormData) {
     // Build validation payload
     const validationPayload = {
-        locationId: formData.get("locationId") as string,
-        // guideId: formData.get("guideId") as string,
-
+        startAt: formData.get("startAt") as string,
+        endAt: formData.get("endAt") as string
     };
 
 
 
-    const validation = zodValidator(validationPayload, createGuideLocationSchema);
+    const validation = zodValidator(validationPayload, createAvailabilitySchema);
 
     if (!validation.success && validation.errors) {
         return {
@@ -37,7 +36,7 @@ export async function createGuideLocation(_prevState: any, formData: FormData) {
     }
 
     try {
-        const response = await serverFetch.post("/guideLocation", {
+        const response = await serverFetch.post("/bookings", {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(validation.data),
         });
@@ -45,10 +44,10 @@ export async function createGuideLocation(_prevState: any, formData: FormData) {
         const result = await response.json();
         return result;
     } catch (error: any) {
-        console.error("Create guide location error:", error);
+        console.error("Create availability error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create location',
+            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create availability',
             formData: validationPayload
         };
     }
@@ -56,9 +55,9 @@ export async function createGuideLocation(_prevState: any, formData: FormData) {
 
 
 
-export async function getLocationForGuideLocation(queryString?: string) {
+export async function getMyBookings(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/location${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.get(`/bookings/me${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -70,19 +69,8 @@ export async function getLocationForGuideLocation(queryString?: string) {
     }
 }
 
-export async function getGuideLocation(queryString?: string) {
-    try {
-        const response = await serverFetch.get(`/guideLocation/me${queryString ? `?${queryString}` : ""}`);
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.log(error);
-        return {
-            success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-        };
-    }
-}
+
+
 
 export async function getUserById(id: string) {
     try {
@@ -102,9 +90,9 @@ export async function getUserById(id: string) {
 
 
 
-export async function deleteGuideLacation(id: string) {
+export async function deleteBooking(id: string) {
     try {
-        const response = await serverFetch.delete(`/guideLocation/${id}`)
+        const response = await serverFetch.delete(`/bookings/${id}`)
         const result = await response.json();
         return result;
     } catch (error: any) {
