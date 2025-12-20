@@ -45,6 +45,12 @@ export const guideNavItems: NavSection[] = [
         title: "Tour Management",
         items: [
             {
+                title: "Tour List",
+                href: "/guide/dashboard/listings",
+                icon: "List",
+                roles: ["GUIDE"],
+            },
+            {
                 title: "Availability",
                 href: "/guide/dashboard/availability",
                 icon: "Calendar",

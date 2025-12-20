@@ -55,7 +55,7 @@ import { createAvailabilitySchema } from "@/zod/availability.validation";
 
 
 
-export async function getTours(queryString?: string) {
+export async function getTourLists(queryString?: string) {
     try {
         const response = await serverFetch.get(`/listings${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();

@@ -13,10 +13,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef} from "react";
 import { toast } from "sonner";
 import {UserInfo } from "@/types/user.interface";
-import { updateTouristStatus, updateUserStatus } from "@/services/admin/userManagement";
+import { updateTouristStatus } from "@/services/admin/userManagement";
 
 interface ITouristStatusUpdateProps {
     open: boolean;

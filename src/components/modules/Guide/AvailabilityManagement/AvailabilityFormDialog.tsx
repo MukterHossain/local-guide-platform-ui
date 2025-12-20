@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { createLocation } from "@/services/admin/locationManagement";
 import { createAvailability } from "@/services/guide/guideAvailable";
 import { useActionState, useEffect, useRef } from "react";
 import { toast } from "sonner";
