@@ -1,3 +1,4 @@
+import { IUserGuide } from "./user.interface";
 
 
 export interface ITourList {
@@ -14,4 +15,6 @@ export interface ITourList {
 
   createdAt: string | Date;
   updatedAt: string | Date;
+
+  guide?: IUserGuide
 }

@@ -2,8 +2,9 @@
 
 "use client";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { ITourList } from "@/types/tourList.interface";
-import { Clock, DollarSign, MapPin, Users, Calendar } from "lucide-react";
+import { Clock, DollarSign, MapPin, Users, Calendar, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,7 +13,7 @@ interface ITourListCardProps {
     tour: ITourList;
     onViewDetails?: (tour: ITourList) => void;
 }
-const ExploreToursCard =  ({ tour}: ITourListCardProps) => {
+const ExploreToursCard = ({ tour }: ITourListCardProps) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const handlePrevImage = () => {
@@ -38,88 +39,46 @@ const ExploreToursCard =  ({ tour}: ITourListCardProps) => {
     return (
         <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 group">
             {/* Image Carousel */}
-            <div className="relative h-56 overflow-hidden bg-gray-200">
+            <div className="relative w-full h-56 overflow-hidden bg-gray-200">
                 {tour.images && tour.images.length > 0 ? (
-                    <>
+                    tour.images.length === 1 ? (
+                        // ✅ Single Image (NO Carousel)
                         <Image
-                            src={tour.images[currentImageIndex]}  
-                            alt={`${tour.title} - Image ${currentImageIndex + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" width={500} height={500}
+                            src={tour.images[0]}
+                            alt={tour.title}
+                            width={500}
+                            height={500}
+                            className="w-full h-56 object-cover"
                         />
-
-                        {/* Image Navigation */}
-                        {tour.images.length > 1 && (
-                            <>
-                                <button
-                                    onClick={handlePrevImage}
-                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
-                                    aria-label="Previous image"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                            clipRule="evenodd"
+                    ) : (
+                        // ✅ Multiple Images (Carousel)
+                        <Carousel className="w-full h-full">
+                            <CarouselContent>
+                                {tour.images.map((image, index) => (
+                                    <CarouselItem key={index}>
+                                        <Image
+                                            src={image}
+                                            alt={`${tour.title} - Image ${index + 1}`}
+                                            width={500}
+                                            height={500}
+                                            className="w-full h-56 object-cover"
                                         />
-                                    </svg>
-                                </button>
-                                <button
-                                    onClick={handleNextImage}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
-                                    aria-label="Next image"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </button>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
 
-                                {/* Image Indicators */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                                    {tour.images.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setCurrentImageIndex(index)}
-                                            className={`h-2 rounded-full transition-all ${
-                                                index === currentImageIndex
-                                                    ? "w-6 bg-white"
-                                                    : "w-2 bg-white/50 hover:bg-white/75"
-                                            }`}
-                                            aria-label={`Go to image ${index + 1}`}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-
-                        {/* Image Counter Badge */}
-                        {tour.images.length > 1 && (
-                            <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                                {currentImageIndex + 1} / {tour.images.length}
-                            </div>
-                        )}
-                    </>
+                            <CarouselPrevious className="left-2" />
+                            <CarouselNext className="right-2" />
+                        </Carousel>
+                    )
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
+                    <div className="w-full h-full flex items-center justify-center">
                         <MapPin className="w-16 h-16 text-gray-500" />
                     </div>
                 )}
 
                 {/* Price Badge */}
-                <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-1.5 rounded-full shadow-lg">
+                <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1.5 rounded-full">
                     <span className="text-lg font-bold">${tour.tourFee}</span>
                 </div>
             </div>
@@ -127,13 +86,13 @@ const ExploreToursCard =  ({ tour}: ITourListCardProps) => {
             {/* Card Content */}
             <div className="p-5 space-y-4">
                 {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 line-clamp-2 min-h-[3.5rem]">
-                    {tour.title}
+                <h3 className="text-xl font-bold text-gray-900 line-clamp-2 ">
+                    {tour.title.slice(0, 25)}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-600 line-clamp-3 min-h-[4rem]">
-                    {tour.description}
+                <p className="text-sm text-gray-600 line-clamp-3 ">
+                    {tour.description.slice(0, 100)}
                 </p>
 
                 {/* Tour Details Grid */}
@@ -197,17 +156,35 @@ const ExploreToursCard =  ({ tour}: ITourListCardProps) => {
                                 </p>
                                 <p className="text-xs text-gray-500 truncate">Tour Guide</p>
                             </div>
+                            <div className="flex items-center gap-2">
+                                <Globe className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                                <span className="text-sm font-medium text-gray-700">
+                                    {tour.guide.languages?.join(', ')}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 )} */}
 
                 {/* View Details Button */}
-                <Link
-                    href={`/tours/${tour.id}`}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                >
-                    View Details
-                </Link>
+                <div className="flex items-center justify-between gap-3">
+                    {/* View Details */}
+                    <Link
+                        href={`/explore-tours/${tour.id}`}
+                        className="text-sm md:text-lg text-center border border-blue-600 text-blue-600 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-sm"
+                    >
+                        View Details
+                    </Link>
+
+                    {/* Book Now */}
+                    <Link
+                        href={`/tour/${tour.id}`}
+                        className="text-sm md:text-lg  text-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    >
+                        Book Now
+                    </Link>
+                </div>
+
             </div>
         </div>
     );
