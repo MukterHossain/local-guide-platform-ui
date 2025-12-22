@@ -1,6 +1,7 @@
 'use client'
 import { InfoItem } from "@/components/shared/InfoItem";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { ITourList } from "@/types/tourList.interface";
 import { Calendar, Clock1, Globe, MapPin, Users } from "lucide-react";
 import Image from "next/image";
@@ -12,20 +13,51 @@ const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
             {/* ================= IMAGE GALLERY ================= */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {tourData.images?.map((img, index) => (
-                    <div
-                        key={index}
-                        className="relative h-72 rounded-xl overflow-hidden"
-                    >
-                        <Image
-                            src={img}
-                            alt={`${tourData.title}-${index}`}
-                            fill
-                            className="object-cover hover:scale-105 transition-transform duration-300"
+            
+            <div className="relative w-full h-96 overflow-hidden bg-gray-200 rounded-xl">
+                {tourData.images && tourData.images.length > 0 ? (
+                    tourData.images.length === 1 ? (
+                        // ✅ Single Image (NO Carousel)
+                        <div className="w-full h-full">
+                            <Image
+                            src={tourData.images[0]}
+                            alt={tourData.title}
+                            width={500}
+                            height={500}
+                            className="w-full h-full object-contain"
                         />
+                        </div>
+                    ) : (
+                        // ✅ Multiple Images (Carousel)
+                        <Carousel className="w-full h-full">
+                            <CarouselContent>
+                                {tourData.images.map((image, index) => (
+                                    <CarouselItem key={index}>
+                                        <Image
+                                            src={image}
+                                            alt={`${tourData.title} - Image ${index + 1}`}
+                                            width={500}
+                                            height={500}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+
+                            <CarouselPrevious className="left-2" />
+                            <CarouselNext className="right-2" />
+                        </Carousel>
+                    )
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <MapPin className="w-16 h-16 text-gray-500" />
                     </div>
-                ))}
+                )}
+
+                {/* Price Badge */}
+                <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1.5 rounded-full">
+                    <span className="text-lg font-bold">${tourData.tourFee}</span>
+                </div>
             </div>
 
             {/* ================= CONTENT ================= */}

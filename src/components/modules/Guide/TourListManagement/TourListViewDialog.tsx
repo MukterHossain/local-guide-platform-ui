@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import {
     Dialog,
     DialogContent,
@@ -73,35 +74,51 @@ const TourListViewDialog = ({
 
                     <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
                         {/* Images Gallery */}
-                        {tourData.images && tourData.images.length > 0 && (
-                            <div className="space-y-3">
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    Tour Images
-                                </h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    {tourData.images.map((imageUrl, index) => (
-                                        <div
-                                            key={index}
-                                            className="relative group cursor-pointer overflow-hidden rounded-lg border-2 border-gray-200 hover:border-blue-500 transition-all"
-                                            onClick={() => setSelectedImage(imageUrl)}
-                                        >
-                                            <Image
-                                                src={imageUrl}
-                                                alt={`Tour image ${index + 1}`}
-                                                className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-300"
-                                                width={500}
-                                                height={500}
-                                            />
-                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                                                <span className="text-white opacity-0 group-hover:opacity-100 text-sm font-medium">
-                                                    Click to view
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                         <div className="relative w-full  overflow-hidden bg-gray-200 rounded-xl">
+                {tourData.images && tourData.images.length > 0 ? (
+                    tourData.images.length === 1 ? (
+                        // ✅ Single Image (NO Carousel)
+                        <div className="w-full h-full">
+                            <Image
+                            src={tourData.images[0]}
+                            alt={tourData.title}
+                            width={500}
+                            height={500}
+                            className="w-full h-full object-contain"
+                        />
+                        </div>
+                    ) : (
+                        // ✅ Multiple Images (Carousel)
+                        <Carousel className="w-full h-full">
+                            <CarouselContent>
+                                {tourData.images.map((image, index) => (
+                                    <CarouselItem key={index}>
+                                        <Image
+                                            src={image}
+                                            alt={`${tourData.title} - Image ${index + 1}`}
+                                            width={500}
+                                            height={500}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+
+                            <CarouselPrevious className="left-2" />
+                            <CarouselNext className="right-2" />
+                        </Carousel>
+                    )
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <MapPin className="w-16 h-16 text-gray-500" />
+                    </div>
+                )}
+
+                {/* Price Badge */}
+                <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1.5 rounded-full">
+                    <span className="text-lg font-bold">${tourData.tourFee}</span>
+                </div>
+            </div>
 
                         {/* Tour Details Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

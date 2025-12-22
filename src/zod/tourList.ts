@@ -26,7 +26,7 @@ export const tourUpdateValidation = z.object({
       z.object({
         categoryId: z.string()
       })
-    ).optional(),
+    ).optional().default([]),
 })
 
 

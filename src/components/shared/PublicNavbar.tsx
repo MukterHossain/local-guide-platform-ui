@@ -31,7 +31,7 @@ if (!accessToken) {
   if (role === "TOURIST") {
   navItems =[
     { href: "/explore-tours", label: "Explore Tours" },
-    { href: "/my-bookings", label: "My Bookings" },
+    { href: "/dashboard/my-bookings", label: "My Bookings" },
     { href: "/profile", label: "Profile" },
     { href: "/dashboard", label: "Dashboard" }
   ]

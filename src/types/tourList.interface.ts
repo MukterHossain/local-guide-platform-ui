@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IUserGuide } from "./user.interface";
 
 
@@ -18,3 +19,15 @@ export interface ITourList {
 
   guide?: IUserGuide
 }
+
+export type TourUpdatePayload = Partial<{
+  title: string;
+  description: string;
+  city: string;
+  meetingPoint: string;
+  durationHours: number;
+  tourFee: number;
+  maxPeople: number;
+  categories: any[];
+  images: string[];
+}>;
