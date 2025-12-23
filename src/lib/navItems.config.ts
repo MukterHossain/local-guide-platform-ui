@@ -13,6 +13,12 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
                     icon: "LayoutDashboard",
                     roles: ["TOURIST", "GUIDE", "ADMIN"],
                 },
+                {
+                    title: "My Profile",
+                    href: `/my-profile`,
+                    icon: "User",
+                    roles: ["TOURIST", "GUIDE", "ADMIN"],
+                },
 
             ]
         },
@@ -31,16 +37,6 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
 }
 
 export const guideNavItems: NavSection[] = [
-      {
-        items: [
-            {
-                title: "My Profile",
-                href: "/guide/dashboard/my-profile",
-                icon: "User",
-                roles: ["GUIDE"],
-            },
-        ],
-    },
     {
         title: "Tour Management",
         items: [
@@ -75,16 +71,7 @@ export const guideNavItems: NavSection[] = [
 ]
 
 export const touristNavItems: NavSection[] = [
-     {
-        items: [
-            {
-                title: "Tourist Profile",
-                href: "/tourist/dashboard/my-profile",
-                icon: "User",
-                roles: ["TOURIST"],
-            },
-        ],
-    },
+     
     {
         title: "Tour Management",
         items: [
@@ -111,17 +98,7 @@ export const touristNavItems: NavSection[] = [
 ]
 
 export const adminNavItems: NavSection[] = [
-    {
-        
-        items: [
-            {
-                title: "Admin Profile",
-                href: "/admin/dashboard/admin-profile",
-                icon: "Users",
-                roles: ["ADMIN"],
-            },
-        ],
-    },
+    
     {
         title: "User Management",
         items: [

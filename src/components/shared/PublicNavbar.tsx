@@ -41,7 +41,7 @@ if (role === "GUIDE") {
   navItems= [
     { href: "/explore-tours", label: "Explore Tours" },
      { href: "/guide/dashboard", label: "Dashboard" },
-    { href: "/guide/dashboard/my-profile", label: "Profile" }
+    { href: "/profile", label: "Profile" },
   ];
 }
 
@@ -50,7 +50,7 @@ if (role === "ADMIN") {
     { href: "/admin/dashboard", label: "Admin Dashboard" },
     { href: "/admin/users", label: "Manage Users" },
     { href: "/admin/listings", label: "Manage Listings" },
-    { href: "/admin/dashboard/admin-profile", label: "Profile" },
+    { href: "/profile", label: "Profile" },
   ];
 }
 }

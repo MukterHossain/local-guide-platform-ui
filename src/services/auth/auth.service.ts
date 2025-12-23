@@ -10,31 +10,83 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
 import { deleteCookie, getCookie, setCookie } from "./tokenHandlers";
+import { updateUserSchema } from "@/zod/user.validation";
+import { UpdateUserPayload } from "@/types/user.interface";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export async function getMyProfile(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/user/me${queryString ? `?${queryString}` : ""}`);
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
 export async function updateMyProfile(formData: FormData) {
     try {
-        // Create a new FormData with the data property
-        const uploadFormData = new FormData();
 
-        // Get all form fields except the file
         const data: any = {};
         formData.forEach((value, key) => {
-            if (key !== 'file' && value) {
-                data[key] = value;
+            if (key === "languages") {
+                data[key] = value?.toString()?.split(",").map(l => l.trim()).filter(Boolean);
+            } else if (
+                ["expertise", "experienceYears", "feePerHour"].includes(key)
+            ) {
+                data.profile = data.profile || {};
+                if (key === "experienceYears" || key === "feePerHour") {
+                    data.profile[key] = Number(value);
+                } else {
+                    data.profile[key] = value.toString();
+                }
+
+            } else if (key !== "file" && value) {
+                data[key] = value.toString();
             }
         });
+
+
+        const uploadFormData = new FormData();
+
 
         // Add the data as JSON string
         uploadFormData.append('data', JSON.stringify(data));
 
+        // Build validation payload
+        const validationPayload: UpdateUserPayload = {
+            name: formData.get("name")?.toString(),
+            phone: formData.get("phone")?.toString(),
+            address: formData.get("address")?.toString(),
+            bio: formData.get("bio")?.toString(),
+            languages:
+                formData.get("languages")
+                    ?.toString()
+                    ?.split(",")
+                    .filter(Boolean) || undefined,
+        };
+
+        const validation = zodValidator(validationPayload, updateUserSchema);
+
+        if (!validation.success && validation.errors) {
+            return {
+                success: false,
+                message: "Validation failed",
+                formData: validationPayload,
+                errors: validation.errors,
+            }
+        }
         // Add the file if it exists
         const file = formData.get('file');
         if (file && file instanceof File && file.size > 0) {
             uploadFormData.append('file', file);
         }
 
-        const response = await serverFetch.patch(`/user/update-my-profile`, {
+        const response = await serverFetch.patch(`/user/update-profile`, {
+            method: "PATCH",
             body: uploadFormData,
         });
 
@@ -121,7 +173,7 @@ export async function resetPassword(_prevState: any, formData: FormData) {
         } else {
             redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
         }
-        
+
 
     } catch (error: any) {
         // Re-throw NEXT_REDIRECT errors so Next.js can handle them

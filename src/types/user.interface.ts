@@ -1,4 +1,6 @@
 import { UserRole } from "@/lib/auth-utils";
+import { updateUserSchema } from "@/zod/user.validation";
+import z from "zod";
 
 export interface UserInfo {
     id: string;
@@ -13,8 +15,22 @@ export interface UserInfo {
     languages: string[];
     needPasswordChange: boolean;
     status: "ACTIVE" | "BLOCKED" | "DELETED";
-    createdAt: string;
-    updatedAt: string;
+    
+    profile?: {
+    expertise?: string | null;
+    experienceYears?: number | null;
+    feePerHour?: number | null;
+    availableStatus?: boolean | null;
+    verificationStatus?: "PENDING" | "APPROVED" | "REJECTED";
+    avgRating?: number | null;
+    locationId?: string | null;
+    adminNote?: string | null;
+  } | null;
+
+  createdAt: string;
+  updatedAt: string;
+
+    
 }
 export interface IUserGuide {
   id: string;
@@ -47,3 +63,17 @@ export interface IUserGuide {
   createdAt: string;
   updatedAt: string;
 }
+
+ export type UpdateUserPayload = z.infer<typeof updateUserSchema>
+//   {
+//   name?: string;
+//   phone?: string;
+//   address?: string;
+//   bio?: string;
+//   languages?: string[];
+//   profile?: {
+//     expertise?: string;
+//     experienceYears?: number;
+//     feePerHour?: number;
+//   };
+// };

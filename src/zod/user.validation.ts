@@ -44,39 +44,53 @@ export const createAdminValidation = z.object({
   role: z.enum(["ADMIN"]), 
 });
 
-export const updateTouristAdminSchema = z.object({
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  image: z.string().optional(),
-  address: z.string().optional(),
-});
-
-export const updateGuideProfileSchema = z.object({
+export const updateUserSchema = z.object({
   name: z.string().optional(),
   phone: z.string().optional(),
   image: z.string().optional(),
   address: z.string().optional(),
   bio: z.string().optional(),
   languages: z.array(z.string()).optional(),
-
-  profile: z.object({
+    profile: z.object({
     expertise: z.string().optional(),
     experienceYears: z.number().optional(),
     feePerHour: z.number().optional(),
-    availableStatus: z.boolean().optional(),
-    locationId: z.string().optional(),
-  }).optional(),
+  }).optional()
+
 });
+// export const updateTouristAdminSchema = z.object({
+//   name: z.string().optional(),
+//   phone: z.string().optional(),
+//   image: z.string().optional(),
+//   address: z.string().optional(),
+// });
+
+// export const updateGuideProfileSchema = z.object({
+//   name: z.string().optional(),
+//   phone: z.string().optional(),
+//   image: z.string().optional(),
+//   address: z.string().optional(),
+//   bio: z.string().optional(),
+//   languages: z.array(z.string()).optional(),
+
+//   profile: z.object({
+//     expertise: z.string().optional(),
+//     experienceYears: z.number().optional(),
+//     feePerHour: z.number().optional(),
+//     availableStatus: z.boolean().optional(),
+//     locationId: z.string().optional(),
+//   }).optional(),
+// });
 
 
-export const updateAdminSchema = z.object({
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  image: z.string().optional().nullable(),
-  address: z.string().optional().nullable(),
-  bio: z.string().optional().nullable(),
-  languages: z.array(z.string()).optional(),
-});
+// export const updateAdminSchema = z.object({
+//   name: z.string().optional(),
+//   phone: z.string().optional(),
+//   image: z.string().optional().nullable(),
+//   address: z.string().optional().nullable(),
+//   bio: z.string().optional().nullable(),
+//   languages: z.array(z.string()).optional(),
+// });
 
 export const adminUpdateGuideStatus = z.object({
   verificationStatus: z.enum(["PENDING", "VERIFIED", "REJECTED"]).optional(),

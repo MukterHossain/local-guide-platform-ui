@@ -65,6 +65,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       toast.error(result.message || "Failed to delete guides");
     }
   };
+  console.log("tourists", tourists)
     return (
         <>
       <ManagementTable

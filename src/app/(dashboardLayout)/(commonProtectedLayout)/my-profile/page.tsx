@@ -1,17 +1,18 @@
+import MyProfile from "@/components/modules/MyProfile/MyProfile";
+import { getMyProfile } from "@/services/auth/auth.service";
 import { getUserInfo } from "@/services/auth/getUserInfo";
 import { UserInfo } from "@/types/user.interface";
 
 const MyProfilePage = async () => {
-//   const userInfo = await getUserInfo()
-  const userInfo = await getUserInfo() as UserInfo; // ‍add UsserInfo
-  return (
-    <div>
-      <h1>My Profile</h1>
-      <p>Name: {userInfo.name}</p>
-      <p>Email: {userInfo.email}</p>
-      <p>Role: {userInfo.role}</p>
-    </div>
-  );
+     const userInfo = await getUserInfo() as UserInfo; 
+     const userData = await getMyProfile()
+     console.log("Tourist userInfo", userInfo)
+     console.log(" userData", userData)
+    return (
+        <div>
+             <MyProfile userInfo={userData.data}></MyProfile>
+        </div>
+    );
 };
 
 export default MyProfilePage;
