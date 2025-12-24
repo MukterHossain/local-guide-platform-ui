@@ -9,14 +9,18 @@ import Link from "next/link";
 
 const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
 
+    const images =
+  Array.isArray(tourData.images)
+    ? tourData.images.filter(img => img && img.trim() !== "")
+    : [];
     console.log("details Tours", tourData)
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
             {/* ================= IMAGE GALLERY ================= */}
             
             <div className="relative w-full h-96 overflow-hidden bg-gray-200 rounded-xl">
-                {tourData.images && tourData.images.length > 0 ? (
-                    tourData.images.length === 1 ? (
+                {images && images.length > 0 ? (
+                    images.length === 1 ? (
                         // ✅ Single Image (NO Carousel)
                         <div className="w-full h-full">
                             <Image
@@ -31,7 +35,7 @@ const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
                         // ✅ Multiple Images (Carousel)
                         <Carousel className="w-full h-full">
                             <CarouselContent>
-                                {tourData.images.map((image, index) => (
+                                {images.map((image, index) => (
                                     <CarouselItem key={index}>
                                         <Image
                                             src={image}

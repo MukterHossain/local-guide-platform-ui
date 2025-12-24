@@ -1,5 +1,5 @@
 import ExploreToursDetails from '@/components/modules/Common/ExploreTours/ExploreToursDetails';
-import { getTourListById } from '@/services/guide/guideTourList';
+import { getTourListById } from '@/services/common/exploreTours';
 
 const ExploreTourDetails = async ({
   params,

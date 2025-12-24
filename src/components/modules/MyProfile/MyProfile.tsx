@@ -82,7 +82,7 @@ console.log("userInfo", userInfo)
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-4">
               <div className="relative">
-                <Avatar className="h-32 w-32">
+                <Avatar className="h-32   w-32">
                   {previewImage || userInfo?.image ? (
                     <AvatarImage
                       src={previewImage || (userInfo?.image as string)}

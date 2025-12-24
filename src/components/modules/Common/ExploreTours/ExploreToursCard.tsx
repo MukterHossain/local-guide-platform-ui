@@ -27,6 +27,9 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
             prev === tour.images.length - 1 ? 0 : prev + 1
         );
     };
+    const images = Array.isArray(tour.images)
+  ? tour.images.filter(img => typeof img === "string" && img.trim() !== "")
+  : [];
 
     const formatDate = (date: string | Date) => {
         return new Date(date).toLocaleDateString('en-US', {
@@ -36,12 +39,13 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
         });
     };
 
+    console.log("tour", tour);
     return (
         <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 group">
             {/* Image Carousel */}
             <div className="relative w-full h-56 overflow-hidden bg-gray-200">
-                {tour.images && tour.images.length > 0 ? (
-                    tour.images.length === 1 ? (
+                {images && images.length > 0 ? (
+                    images.length === 1 ? (
                         // ✅ Single Image (NO Carousel)
                         <Image
                             src={tour.images[0]}
@@ -54,7 +58,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                         // ✅ Multiple Images (Carousel)
                         <Carousel className="w-full h-full">
                             <CarouselContent>
-                                {tour.images.map((image, index) => (
+                                {images.map((image, index) => (
                                     <CarouselItem key={index}>
                                         <Image
                                             src={image}
@@ -170,7 +174,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                 <div className="flex items-center justify-between gap-3">
                     {/* View Details */}
                     <Link
-                        href={`/explore-tours/${tour.id}`}
+                        href={`/explore-tours/tour/${tour.id}`}
                         className="text-sm md:text-lg text-center border border-blue-600 text-blue-600 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-sm"
                     >
                         View Details
