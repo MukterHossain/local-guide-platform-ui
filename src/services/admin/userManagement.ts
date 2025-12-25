@@ -66,66 +66,7 @@ export async function getUserById(id: string) {
 }
 
 
-// export async function updateMyProfile(_prevState: any, formData: FormData) {
-//     // Build validation payload
-//     const payload = {
-//     name: formData.get("name") || undefined,
-//     phone: formData.get("phone") || undefined,
-//     address: formData.get("address") || undefined,
-//     bio: formData.get("bio") || undefined,
-//     languages:
-//       formData.get("languages")
-//         ?.toString()
-//         ?.split(",")
-//         .filter(Boolean) || undefined,
-//   };
 
-
-//     const validation = zodValidator(payload, updateUserSchema);
-
-//     if (!validation.success && validation.errors) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//             errors: validation.errors,
-//             formData: payload,
-//         }
-//     }
-
-
-//     if (!validation.data) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//               errors: validation.errors,
-//             formData: payload,
-//         }
-//     }
-//      const fd = new FormData();
-//   fd.append("data", JSON.stringify(validation.data));
-
-//   const file = formData.get("file") as File | null;
-//   if (file && file.size > 0) {
-//     fd.append("file", file);
-//   }
-    
-
-//     try {
-//         const response = await serverFetch.patch(`/user/update-profile`, {
-//            body: fd,
-//         });
-
-//         const result = await response.json();
-//         return result;
-//     } catch (error: any) {
-//         console.error("Create Admin error:", error);
-//         return {
-//             success: false,
-//             message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to update Profile',
-//             formData:  payload
-//         };
-//     }
-// }
 export async function updateUserStatus(id: string, _prevState: any, formData: FormData) {
     // Build validation payload
     const validationPayload = {

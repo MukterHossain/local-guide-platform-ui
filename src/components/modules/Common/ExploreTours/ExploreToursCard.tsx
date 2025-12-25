@@ -174,7 +174,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                 <div className="flex items-center justify-between gap-3">
                     {/* View Details */}
                     <Link
-                        href={`/explore-tours/tour/${tour.id}`}
+                        href={`/explore-tours/tours/${tour.id}`}
                         className="text-sm md:text-lg text-center border border-blue-600 text-blue-600 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-sm"
                     >
                         View Details
