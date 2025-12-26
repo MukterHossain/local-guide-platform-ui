@@ -1,11 +1,13 @@
+import MetadataCard from "@/components/modules/Admin/MetaDataManagement/MetadataCard";
 import { getMetaData } from "@/services/admin/metaData";
 
 const DashboardPage =async () => {
     const meta = await getMetaData()
+    if(!meta.data) return <div>No Data Found</div>
     console.log("meta Data", meta)
     return (
         <div>
-            <h1>Dashboard</h1>
+            <MetadataCard metaData={meta.data}></MetadataCard>
         </div>
     );
 };
