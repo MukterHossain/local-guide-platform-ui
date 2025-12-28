@@ -38,7 +38,7 @@ const TourListViewDialog = ({
       setLoading(true);
 
       const res = await getTourListById(id);
-// console.log("GET USER RES:", res);
+console.log("GET USER RES:", res);
 
       if (res.success) {
         setData(res.data);
@@ -52,7 +52,6 @@ const TourListViewDialog = ({
   }, [open, id]);
 
     const tourData = data;
-    if (!tourData) return null;
 
     const formatDate = (date: string | Date) => {
         return new Date(date).toLocaleDateString('en-US', {
@@ -66,7 +65,15 @@ const TourListViewDialog = ({
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="max-h-[90vh] max-w-4xl flex flex-col p-0">
-                    <DialogHeader className="px-6 pt-6 pb-4 border-b">
+                    <DialogTitle>Tour Details</DialogTitle>
+                  {loading && (
+                    <div className="flex items-center justify-center h-full">
+                        <p>Loading...</p>
+                    </div>
+                  )}
+                  {!loading && tourData && (
+                    <>
+                      <DialogHeader className="px-6 pt-6 pb-4 border-b">
                         <DialogTitle className="text-2xl font-bold">
                             {tourData.title}
                         </DialogTitle>
@@ -190,35 +197,6 @@ const TourListViewDialog = ({
                             </p>
                         </div>
 
-                        {/* Guide Information */}
-                        {/* {tourData.guide && (
-                            <div className="space-y-2">
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    Guide Information
-                                </h3>
-                                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                                            {tourData.guide.name?.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-900">
-                                                {tourData.guide.name}
-                                            </p>
-                                            <p className="text-sm text-gray-600">
-                                                {tourData.guide.email}
-                                            </p>
-                                            {tourData.guide.phone && (
-                                                <p className="text-sm text-gray-600">
-                                                    {tourData.guide.phone}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )} */}
-
                         {/* Dates */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                             <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -233,15 +211,17 @@ const TourListViewDialog = ({
                     </div>
 
                     {/* Footer */}
-                    {/* <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50">
-                        <Button
+                    <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50">
+                        {/* <Button
                             type="button"
                             variant="outline"
-                            onClick={onOpenChange}
+                            onClick={() => setIsOpen(false)}
                         >
                             Close
-                        </Button>
-                    </div> */}
+                        </Button> */}
+                    </div>
+                    </>
+                  )}
                 </DialogContent>
             </Dialog>
 

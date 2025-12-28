@@ -10,6 +10,7 @@ export function MetaBarChart({barChartData}:any) {
    
   return (
     <div>
+      <h1>Booking</h1>
         <ChartContainer config={bookingBarChartConfig} className="min-h-[200px] w-full">
       <BarChart accessibilityLayer data={barChartData}>
         <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />12

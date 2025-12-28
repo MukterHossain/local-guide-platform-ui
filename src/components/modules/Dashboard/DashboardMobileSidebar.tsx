@@ -24,19 +24,16 @@ interface DashboardMobileSidebarContentProps {
 const DashboardMobileSidebar = ({
   userInfo,
   navItems,
-  dashboardHome,
+  // dashboardHome,
 }: DashboardMobileSidebarContentProps) => {
   const pathname = usePathname();
   return (
     <div className=" flex h-full flex-col">
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-6 space-x-2 py-2">
-        <Link href={"/"} className="flex items-center ">
-            <Image src="/logo.png" alt="Logo" className="rounded-full border-2 border-gray-800/40" width={35} height={35} />
-          </Link>
-        <Link href={dashboardHome} className="flex items-center space-x-2">
+        <Link href={"/"} className="flex items-center gap-x-1">
+            <Image src="/logo.png" alt="Logo" className="rounded-full border-2 border-gray-800/40" width={40} height={40} />
             <h3 className="font-bold text-lg sm:text-2xl text-green-800">Trip Guide</h3>
-          
           </Link>
       </div>
       <SheetTitle className="sr-only">Navigation Menu</SheetTitle>

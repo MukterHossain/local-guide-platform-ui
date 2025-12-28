@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { createTourList, getLocationForTourList } from "@/services/guide/guideTourList";
+import { createTourList, getCategoryForTourList, getLocationForTourList } from "@/services/guide/guideTourList";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -29,6 +29,7 @@ const TourListFormDialog = ({
     const [state, formAction, isPending] = useActionState(createTourList, null);
 
     const [locations, setLocations] = useState<any[]>([]);
+    const [category, setCategory] = useState<any[]>([]);
     useEffect(() => {
         if (state?.success) {
             toast.success(state.message || "Tour list created successfully");
@@ -51,11 +52,21 @@ const TourListFormDialog = ({
         }
         fetchLocations();
     }, []);
+    useEffect(() => {
+        async function fetchCategories() {
+            const res = await getCategoryForTourList();
+            if (res?.success) {
+                setCategory(res.data);
+            }
+        }
+        fetchCategories();
+    }, []);
 
     const handleClose = () => {
         formRef.current?.reset();
         onClose();
     };
+    console.log("Create tour", state)
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogContent className="max-h-[90vh] flex flex-col p-0">
@@ -80,27 +91,35 @@ const TourListFormDialog = ({
                             />
                             <InputFieldError field="title" state={state} />
                         </Field>
+                        <Field>
+                            {/* Categories */}
+                            <FieldLabel>Categories</FieldLabel>
+                            <select name="categories" multiple required className="w-full border rounded p-2">
+                                {category?.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                            <InputFieldError field="categories" state={state} />
+                        </Field>
                         {/* city */}
                         <Field>
-  <FieldLabel htmlFor="city">City</FieldLabel>
-  <select
-    name="city"
-    className="border text-black rounded p-2 w-full"
-    defaultValue=""
-  >
-    <option value="" disabled>
-      Select city
-    </option>
+                            <FieldLabel htmlFor="city">City</FieldLabel>
+                            <select
+                                name="city"
+                                required
+                                className="border text-black rounded p-2 w-full"
+                            >
+                                <option value="">Select city</option>
 
-    {locations.map((loc) => (
-      <option key={loc.id} value={loc.city}> {/* value এ city name দিন */}
-        {loc.city}
-      </option>
-    ))}
-  </select>
+                                {locations.map((loc) => (
+                                    <option key={loc.id} value={loc.city}>
+                                        {loc.city}
+                                    </option>
+                                ))}
+                            </select>
 
-  <InputFieldError field="city" state={state} />
-</Field>
+                            <InputFieldError field="city" state={state} />
+                        </Field>
 
                         {/* durationHours */}
                         <Field>
@@ -153,11 +172,11 @@ const TourListFormDialog = ({
                         {/* Description */}
                         <Field>
                             <FieldLabel htmlFor="description">Description</FieldLabel>
-                            <Input
+                            <textarea
                                 id="description"
                                 name="description"
-                                type="text"
-
+                                rows={4}
+                                className="w-full border rounded p-2"
                             />
                             <InputFieldError field="description" state={state} />
                         </Field>

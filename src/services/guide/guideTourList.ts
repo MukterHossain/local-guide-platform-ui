@@ -8,18 +8,36 @@ import { tourCreateValidation, tourUpdateValidation } from "@/zod/tourList";
 
 
 export async function createTourList(_prevState: any, formData: FormData) {
+
+    console.log("tour create server", formData)
+    const categories = Array.from(formData.getAll("categories"))
+        .filter(cat => !!cat)
+        .map(cat => ({ categoryId: cat as string }));
+
+    // Number fields
+
+    const durationHours = Number(formData.get("durationHours") ?? 0);
+    const tourFee = Number(formData.get("tourFee") ?? 0);
+    const maxPeople = Number(formData.get("maxPeople") ?? 0);
+
     const validationPayload = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        city: formData.get("city") as string,
-        durationHours: Number(formData.get("durationHours")), // string to number
-        tourFee: Number(formData.get("tourFee")), // string to number
-        maxPeople: Number(formData.get("maxPeople")), // string to number
-        meetingPoint: formData.get("meetingPoint") as string,
-        images: formData.getAll("images"), // file array
+        title: formData.get("title") ?? "",
+        description: formData.get("description") ?? "",
+        city: formData.get("city") ?? "",
+        durationHours,
+        tourFee,
+        maxPeople,
+        meetingPoint: formData.get("meetingPoint") || undefined,
+        categories,
     };
 
-
+    if (categories.length === 0) {
+        return {
+            success: false,
+            message: "Select at least one category",
+            formData: validationPayload,
+        };
+    }
 
 
     const validation = zodValidator(validationPayload, tourCreateValidation);
@@ -46,13 +64,7 @@ export async function createTourList(_prevState: any, formData: FormData) {
 
     // JSON data একটি field এ যোগ করুন
     submitFormData.append('data', JSON.stringify({
-        title: validation.data.title,
-        description: validation.data.description,
-        city: validation.data.city,
-        durationHours: validation.data.durationHours,
-        tourFee: validation.data.tourFee,
-        maxPeople: validation.data.maxPeople,
-        meetingPoint: validation.data.meetingPoint,
+        ...validation.data,
     }));
 
     const images = formData.getAll("images");
@@ -68,6 +80,8 @@ export async function createTourList(_prevState: any, formData: FormData) {
         });
 
         const result = await response.json();
+        console.log("tour create server", formData)
+        console.log("tour create result server", result)
         return result;
     } catch (error: any) {
         console.error("Create tour list error:", error);
@@ -98,6 +112,19 @@ export async function getMyTourLists(queryString?: string) {
 export async function getLocationForTourList(queryString?: string) {
     try {
         const response = await serverFetch.get(`/location${queryString ? `?${queryString}` : ""}`);
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
+export async function getCategoryForTourList(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/category${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -141,6 +168,10 @@ export async function updateTourList(_prevState: any, formData: FormData) {
             return undefined;
         }
     };
+
+
+    const parsedCategories = parseJSON("categories");
+    const existing = parseJSON("existingImages")
     const payload: TourUpdatePayload = {
         title: formData.get("title")?.toString(),
         description: formData.get("description")?.toString(),
@@ -149,12 +180,21 @@ export async function updateTourList(_prevState: any, formData: FormData) {
         durationHours: formData.get("durationHours") ? Number(formData.get("durationHours")) : undefined,
         tourFee: formData.get("tourFee") ? Number(formData.get("tourFee")) : undefined,
         maxPeople: formData.get("maxPeople") ? Number(formData.get("maxPeople")) : undefined,
-        categories: parseJSON("categories"),
-        // images: formData.getAll("images"),
+        ...(Array.isArray(parsedCategories) && parsedCategories.length > 0
+            ? { categories: parsedCategories }
+            : {}),
 
     };
-    const existing = parseJSON("existingImages") as string[] | undefined;
-    if (existing && existing.length > 0) {
+
+    const categoryIds = formData.getAll("categories") as string[];
+
+    if (categoryIds.length > 0) {
+        payload.categories = categoryIds.map(id => ({
+            categoryId: id,
+        }));
+    }
+
+    if (Array.isArray(existing)) {
         payload.images = existing;
     }
     // ❗ remove undefined fields
@@ -164,30 +204,23 @@ export async function updateTourList(_prevState: any, formData: FormData) {
         }
     });
 
-    //   if (!Object.keys(payload).length && !formData.getAll("images").length) {
-    //     return { success: false, message: "No valid fields to update" };
-    //   }
+    const validation = zodValidator(payload, tourUpdateValidation);
 
-    // const validation = zodValidator(payload, tourUpdateValidation);
-
-    // if (!validation.success && validation.errors) {
-    //     return {
-    //         success: false,
-    //         message: "Validation failed",
-    //         errors: validation.errors,
-    //         formData: payload,
-    //     }
-    // }
-
-
-    // if (!validation.data) {
-    //     return {
-    //         success: false,
-    //         message: "Validation failed",
-    //         errors: validation.errors,
-    //         formData: payload,
-    //     }
-    // }
+    if (!validation.success) {
+        return {
+            success: false,
+            message: "Validation failed",
+            errors: validation.errors,
+            formData: payload,
+        }
+    }
+    if (Object.keys(payload).length === 0 && formData.getAll("images").length === 0) {
+        return {
+            success: false,
+            message: "No changes detected",
+            formData: payload
+        }
+    }
 
     const fd = new FormData();
     fd.append("data", JSON.stringify(payload));

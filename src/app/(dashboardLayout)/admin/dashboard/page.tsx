@@ -1,5 +1,5 @@
-import MetadataCard from "@/components/modules/Admin/MetaDataManagement/MetadataCard";
-import { getMetaData } from "@/services/admin/metaData";
+import AdminMetadataCard from "@/components/modules/Meta/AdminMetaData/AdminMetadataCard";
+import { getMetaData } from "@/services/meta/metaData";
 
 const DashboardPage =async () => {
     const meta = await getMetaData()
@@ -7,7 +7,8 @@ const DashboardPage =async () => {
     console.log("meta Data", meta)
     return (
         <div>
-            <MetadataCard metaData={meta.data}></MetadataCard>
+            <AdminMetadataCard metaData={meta.data}></AdminMetadataCard>
+
         </div>
     );
 };

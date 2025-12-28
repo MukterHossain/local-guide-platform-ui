@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { updateTourList, getLocationForTourList } from "@/services/guide/guideTourList";
+import { updateTourList, getLocationForTourList, getCategoryForTourList } from "@/services/guide/guideTourList";
 import { ITourList } from "@/types/tourList.interface";
 import Image from "next/image";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -34,9 +34,8 @@ const TourListUpdateDialog = ({
     const [state, formAction, isPending] = useActionState(updateTourList, null);
     const hasShownToast = useRef(false);
     const [locations, setLocations] = useState<any[]>([]);
-    const [existingImages, setExistingImages] = useState<string[]>(tourLists?.images || []);
-    // const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
+    const [existingImages, setExistingImages] = useState<string[]>(() => tourLists?.images ?? []);
+    const [category, setCategory] = useState<any[]>([]);
 
     useEffect(() => {
         if (!state) return;
@@ -63,6 +62,16 @@ const TourListUpdateDialog = ({
         fetchLocations();
     }, []);
 
+    useEffect(() => {
+        async function fetchCategories() {
+            const res = await getCategoryForTourList();
+            if (res?.success) {
+                setCategory(res.data);
+            }
+        }
+        fetchCategories();
+    }, []);
+
     const handleClose = () => {
         // formRef.current?.reset();
         // setExistingImages([]);
@@ -77,9 +86,10 @@ const TourListUpdateDialog = ({
 
     if (!tourLists) return null;
 
-    console.log("Tour List Update", state, isPending);
+    // console.log("Tour List Update", state, isPending);
+    // console.log("Tour List Update existingImages", existingImages);
     return (
-        <Dialog open={open} onOpenChange={handleClose}>
+        <Dialog open={open} onOpenChange={(isOpen) => {if(!isOpen) handleClose()}}>
             <DialogContent className="max-h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Update Tour</DialogTitle>
@@ -101,18 +111,48 @@ const TourListUpdateDialog = ({
                             value={JSON.stringify(existingImages)}
                         />
 
-                        {/* categories (example empty) */}
-                        <input type="hidden" name="categories" value="[]" />
-
                         <Field>
                             <FieldLabel>Title</FieldLabel>
                             <Input name="title" defaultValue={tourLists.title} />
                             <InputFieldError field="title" state={state} />
                         </Field>
 
-                        <Field>
+                        {/* <Field>
                             <FieldLabel>City</FieldLabel>
                             <Input name="city" defaultValue={tourLists.city} />
+                        </Field> */}
+                        <Field>
+                            {/* Categories */}
+                            <FieldLabel>Categories</FieldLabel>
+                            <select
+                                name="categories"
+                                multiple
+                                defaultValue={tourLists.categories?.map(cat => cat.id)}
+                                className="w-full border rounded p-2"
+                            >
+                                {category.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </Field>
+                        {/* city */}
+                        <Field>
+                            <FieldLabel htmlFor="city">City</FieldLabel>
+                            <select
+                                name="city"
+                                defaultValue={tourLists.city}
+                                className="border text-black rounded p-2 w-full"
+                            >
+                                <option value="">Select city</option>
+
+                                {locations.map((loc) => (
+                                    <option key={loc.id} value={loc.city}>
+                                        {loc.city}
+                                    </option>
+                                ))}
+                            </select>
                         </Field>
 
                         <Field>
@@ -180,7 +220,9 @@ const TourListUpdateDialog = ({
                                         </button>
                                     </div>
                                 ))}
+
                             </div>
+
                         )}
 
                         <Field>

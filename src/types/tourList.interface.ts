@@ -13,6 +13,10 @@ export interface ITourList {
   tourFee: number;
   maxPeople: number;
   meetingPoint: string;
+  categories?: {
+    id: string;
+    name: string;
+  }[];
 
   createdAt: string | Date;
   updatedAt: string | Date;

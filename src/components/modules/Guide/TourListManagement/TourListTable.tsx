@@ -17,8 +17,8 @@ interface AvailabilityTableProps {
   tourLists: ITourList[];
 }
 
-const TourListTable = ({tourLists}: AvailabilityTableProps) => {
-     const router = useRouter();
+const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
+  const router = useRouter();
   const [, startTransition] = useTransition();
   const [deletingTourList, setDeletingTourList] = useState<ITourList | null>(
     null
@@ -28,14 +28,14 @@ const TourListTable = ({tourLists}: AvailabilityTableProps) => {
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
- const handleView = (tourList: ITourList) => {
-  setSelectedId(tourList.id);
-  setViewOpen(true);
-};
+  const handleView = (tourList: ITourList) => {
+    setSelectedId(tourList.id);
+    setViewOpen(true);
+  };
 
 
 
-const handleEdit = (tourList: ITourList) => {
+  const handleEdit = (tourList: ITourList) => {
     setEditingTourList(tourList);
   };
 
@@ -53,7 +53,7 @@ const handleEdit = (tourList: ITourList) => {
     if (!deletingTourList) return;
 
     setIsDeleting(true);
-    const result = await deleteTourList( deletingTourList.id!);
+    const result = await deleteTourList(deletingTourList.id!);
     setIsDeleting(false);
 
     if (result.success) {
@@ -64,8 +64,8 @@ const handleEdit = (tourList: ITourList) => {
       toast.error(result.message || "Failed to delete Tour List");
     }
   };
-    return (
-         <>
+  return (
+    <>
       <ManagementTable
         data={tourLists}
         columns={TourListColumns}
@@ -86,22 +86,23 @@ const handleEdit = (tourList: ITourList) => {
         isDeleting={isDeleting}
       />
 
-       <TourListViewDialog
-  open={viewOpen}
-  onOpenChange={(open) => {
-    setViewOpen(open);
-    if (!open) setSelectedId(null!);
-  }}
-  id={selectedId}
-/>
-<TourListUpdateDialog 
-  open={!!editingTourList}
-    onClose={() => setEditingTourList(null)}
-    onSuccess={handleRefresh}
-    tourLists={editingTourList as ITourList}
-/>
+      <TourListViewDialog
+        open={viewOpen}
+        onOpenChange={(open) => {
+          setViewOpen(open);
+          if (!open) setSelectedId(null!);
+        }} 
+        id={selectedId}
+      /> 
+      <TourListUpdateDialog
+        open={!!editingTourList}
+        key={editingTourList?.id}
+        onClose={() => setEditingTourList(null)}
+        onSuccess={handleRefresh}
+        tourLists={editingTourList as ITourList}
+      />
     </>
-    );
+  );
 };
 
 export default TourListTable;

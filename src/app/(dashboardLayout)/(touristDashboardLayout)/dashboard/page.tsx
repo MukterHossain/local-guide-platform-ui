@@ -1,13 +1,13 @@
-import LogoutButton from '@/components/shared/LogoutButton';
-import { getCookie } from '@/services/auth/tokenHandlers';
-import React from 'react';
+import TouristMetaDataCard from '@/components/modules/Meta/TouristMetaData/TouristMetaDataCard';
+import { getMetaData } from '@/services/meta/metaData';
 
-const TouristDashboardPage = async () => {
-     const accessToken = await getCookie("accessToken");
+const TouristDashboardPage =async () => {
+    const meta = await getMetaData()
+    if(!meta.data) return <div>No Data Found</div>
+    console.log("meta Data Tourist", meta)
     return (
         <div>
-            
-            <h1>Tourist Dashboard</h1>
+            <TouristMetaDataCard metaData={meta.data}></TouristMetaDataCard>
         </div>
     );
 };

@@ -10,26 +10,26 @@ import Link from "next/link";
 const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
 
     const images =
-  Array.isArray(tourData.images)
-    ? tourData.images.filter(img => img && img.trim() !== "")
-    : [];
+        Array.isArray(tourData.images)
+            ? tourData.images.filter(img => img && img.trim() !== "")
+            : [];
     console.log("details Tours", tourData)
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
             {/* ================= IMAGE GALLERY ================= */}
-            
+
             <div className="relative w-full h-96 overflow-hidden bg-gray-200 rounded-xl">
                 {images && images.length > 0 ? (
                     images.length === 1 ? (
                         // ✅ Single Image (NO Carousel)
                         <div className="w-full h-full">
                             <Image
-                            src={tourData.images[0]}
-                            alt={tourData.title}
-                            width={500}
-                            height={500}
-                            className="w-full h-full object-contain"
-                        />
+                                src={tourData.images[0]}
+                                alt={tourData.title}
+                                width={500}
+                                height={500}
+                                className="w-full h-full object-contain"
+                            />
                         </div>
                     ) : (
                         // ✅ Multiple Images (Carousel)
@@ -93,6 +93,17 @@ const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
                         </div>
                     )}
 
+                    {/* ===== TOUR Category ===== */}
+                    {tourData.categories && tourData.categories.length > 0 && (
+                        <div className="border-t pt-4">
+                            <h3 className="font-semibold text-gray-800 mb-1">Tour Category</h3>
+                            <p className="text-gray-600">
+                                {tourData.categories.map((cat) => cat.name).join(", ")}
+                            </p>
+                        </div>
+                    )}
+
+
                     {/* ===== GUIDE INFO ===== */}
                     {tourData.guide && (
                         <div className="border-t pt-4">
@@ -130,14 +141,14 @@ const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
 
                     <div className="space-y-2 flex flex-col ">
                         <Link href={`/explore-tours/book/${tourData.id}`}>
-                        <Button className="w-full  bg-purple-900 text-white py-3 rounded-lg">
-                            Book This Tour
-                        </Button>
-                    </Link>
+                            <Button className="w-full  bg-purple-900 text-white py-3 rounded-lg">
+                                Book This Tour
+                            </Button>
+                        </Link>
 
-                    <Button className="w-full  bg-blue-600 text-white py-3 rounded-lg">
-                        Contact Guide
-                    </Button>
+                        <Button className="w-full  bg-blue-600 text-white py-3 rounded-lg">
+                            Contact Guide
+                        </Button>
                     </div>
                 </div>
             </div>

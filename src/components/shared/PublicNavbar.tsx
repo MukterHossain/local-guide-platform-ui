@@ -41,16 +41,16 @@ if (role === "GUIDE") {
   navItems= [
     { href: "/explore-tours", label: "Explore Tours" },
      { href: "/guide/dashboard", label: "Dashboard" },
-    { href: "/profile", label: "Profile" },
+    { href: "/my-profile", label: "Profile" },
   ];
 }
 
 if (role === "ADMIN") {
   navItems = [
     { href: "/admin/dashboard", label: "Admin Dashboard" },
-    { href: "/admin/users", label: "Manage Users" },
-    { href: "/admin/listings", label: "Manage Listings" },
-    { href: "/profile", label: "Profile" },
+    { href: "/admin/dashboard/guides-management", label: "Manage Users" },
+    { href: "/admin/dashboard/listings", label: "Manage Listings" },
+    { href: "/my-profile", label: "Profile" },
   ];
 }
 }
