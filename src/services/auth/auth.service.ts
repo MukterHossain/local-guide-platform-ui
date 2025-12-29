@@ -3,7 +3,6 @@ import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/li
 import { verifyAccessToken } from "@/lib/jwtHanlders";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { resetPasswordSchema } from "@/zod/auth.validation";
 import { parse } from "cookie";
 import jwt from "jsonwebtoken";
 import { revalidateTag } from "next/cache";
@@ -104,89 +103,89 @@ export async function updateMyProfile(formData: FormData) {
 }
 
 // Reset Password
-export async function resetPassword(_prevState: any, formData: FormData) {
+// export async function resetPassword(_prevState: any, formData: FormData) {
 
-    const redirectTo = formData.get('redirect') || null;
+//     const redirectTo = formData.get('redirect') || null;
 
-    // Build validation payload
-    const validationPayload = {
-        newPassword: formData.get("newPassword") as string,
-        confirmPassword: formData.get("confirmPassword") as string,
-    };
+//     // Build validation payload
+//     const validationPayload = {
+//         newPassword: formData.get("newPassword") as string,
+//         confirmPassword: formData.get("confirmPassword") as string,
+//     };
 
-    // Validate
-    const validatedPayload = zodValidator(validationPayload, resetPasswordSchema);
+//     // Validate
+//     const validatedPayload = zodValidator(validationPayload, resetPasswordSchema);
 
-    if (!validatedPayload.success && validatedPayload.errors) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-            errors: validatedPayload.errors,
-        };
-    }
+//     if (!validatedPayload.success && validatedPayload.errors) {
+//         return {
+//             success: false,
+//             message: "Validation failed",
+//             formData: validationPayload,
+//             errors: validatedPayload.errors,
+//         };
+//     }
 
-    try {
+//     try {
 
-        const accessToken = await getCookie("accessToken");
+//         const accessToken = await getCookie("accessToken");
 
-        if (!accessToken) {
-            throw new Error("User not authenticated");
-        }
-        // console.log("accessToken", accessToken)
-        const verifiedToken = jwt.verify(accessToken as string, process.env.JWT_SECRET!) as jwt.JwtPayload;
-        // console.log("verifiedToken", verifiedToken)
-        const userRole: UserRole = verifiedToken.role;
+//         if (!accessToken) {
+//             throw new Error("User not authenticated");
+//         }
+//         // console.log("accessToken", accessToken)
+//         const verifiedToken = jwt.verify(accessToken as string, process.env.JWT_SECRET!) as jwt.JwtPayload;
+//         // console.log("verifiedToken", verifiedToken)
+//         const userRole: UserRole = verifiedToken.role;
 
-        const user = await getUserInfo();
-        // API Call
-        const response = await serverFetch.post("/auth/change-password", {
-            body: JSON.stringify({
-                id: user?.id,
-                password: validationPayload.newPassword,
-            }),
-            headers: {
-                "Authorization": accessToken,
-                "Content-Type": "application/json",
-            },
-        });
+//         const user = await getUserInfo();
+//         // API Call
+//         const response = await serverFetch.post("/auth/change-password", {
+//             body: JSON.stringify({
+//                 id: user?.id,
+//                 password: validationPayload.newPassword,
+//             }),
+//             headers: {
+//                 "Authorization": accessToken,
+//                 "Content-Type": "application/json",
+//             },
+//         });
 
-        const result = await response.json();
+//         const result = await response.json();
 
-        if (!result.success) {
-            throw new Error(result.message || "Reset password failed");
-        }
+//         if (!result.success) {
+//             throw new Error(result.message || "Reset password failed");
+//         }
 
-        if (result.success) {
-            // await get******************
-            revalidateTag("user-info", { expire: 0 });
-        }
-        // console.log("resetPassword", result)
+//         if (result.success) {
+//             // await get******************
+//             revalidateTag("user-info", { expire: 0 });
+//         }
+//         // console.log("resetPassword", result)
 
-        if (redirectTo) {
-            const requestedPath = redirectTo.toString();
-            if (isValidRedirectForRole(requestedPath, userRole)) {
-                redirect(`${requestedPath}?loggedIn=true`);
-            } else {
-                redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
-            }
-        } else {
-            redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
-        }
+//         if (redirectTo) {
+//             const requestedPath = redirectTo.toString();
+//             if (isValidRedirectForRole(requestedPath, userRole)) {
+//                 redirect(`${requestedPath}?loggedIn=true`);
+//             } else {
+//                 redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+//             }
+//         } else {
+//             redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
+//         }
 
 
-    } catch (error: any) {
-        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
-        if (error?.digest?.startsWith("NEXT_REDIRECT")) {
-            throw error;
-        }
-        return {
-            success: false,
-            message: error?.message || "Something went wrong",
-            formData: validationPayload,
-        };
-    }
-}
+//     } catch (error: any) {
+//         // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+//         if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+//             throw error;
+//         }
+//         return {
+//             success: false,
+//             message: error?.message || "Something went wrong",
+//             formData: validationPayload,
+//         };
+//     }
+// }
 
 export async function getNewAccessToken() {
     try {
@@ -236,6 +235,7 @@ export async function getNewAccessToken() {
         const result = await response.json();
 
         console.log("access token refreshed!!");
+        console.log("access token refreshed!!", result);
 
         const setCookieHeaders = response.headers.getSetCookie();
 

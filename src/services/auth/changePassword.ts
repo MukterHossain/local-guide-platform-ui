@@ -4,15 +4,30 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { loginUser } from "./loginUser";
+import { zodValidator } from "@/lib/zodValidator";
+import { changePasswordSchema } from "@/zod/auth.validation";
 
 
 
 export const changePassword = async (_currentState: any, formData: any): Promise<any> => {
-    try {
-        const payload = {
+    
+     const payload = {
             oldPassword: formData.get("oldPassword"),
             newPassword: formData.get("newPassword"),
         };
+            const validatedPayload = zodValidator(payload, changePasswordSchema);
+        
+            if (!validatedPayload.success && validatedPayload.errors) {
+                return {
+                    success: false,
+                    message: "Validation failed",
+                    formData: payload,
+                    errors: validatedPayload.errors,
+                };
+            }
+    
+    try {
+       
 
         const res = await serverFetch.post("/auth/change-password", {
             headers: {

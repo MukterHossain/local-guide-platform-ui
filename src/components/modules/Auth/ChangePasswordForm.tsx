@@ -21,7 +21,7 @@ const ChangePasswordForm = ({ redirect }: { redirect?: string }) => {
 
   useEffect(() => {
     if (state && !state.success && state.message) {
-      toast.error(state.message);
+      toast.error(state.message || "Change password failed. Please try again.");
     }
   }, [state]);
   console.log("changePassword", state)

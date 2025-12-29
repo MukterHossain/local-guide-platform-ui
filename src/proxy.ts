@@ -29,8 +29,6 @@ const accessToken = await getCookie("accessToken") || null;
     try {
       const verifiedToken: JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET as string)
       if (typeof verifiedToken === "string") {
-        // cookieStore.delete('accessToken')
-        // cookieStore.delete('refreshToken')
         await deleteCookie('accessToken');
         await deleteCookie('refreshToken');
         return NextResponse.redirect(new URL(`/login`, request.url))
