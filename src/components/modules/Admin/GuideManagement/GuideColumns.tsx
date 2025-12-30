@@ -1,5 +1,6 @@
 "use client";
 
+import { StatusBadgeCell } from "@/components/shared/cell/StatusBadgeCell";
 import { Column } from "@/components/shared/ManagementTable";
 import { IUserGuide } from "@/types/user.interface";
 
@@ -21,7 +22,7 @@ const GuideColumns: Column<IUserGuide>[] = [
   },
   {
     header: "Status",
-    accessor: (user) => user.status,
+    accessor: (user) => <StatusBadgeCell isDeleted={user.status === "DELETED"} isBlocked={user.status === "BLOCKED"}/> ,
   },
   {
     header: "verificationStatus",

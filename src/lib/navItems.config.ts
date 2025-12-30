@@ -93,6 +93,12 @@ export const touristNavItems: NavSection[] = [
                 icon:  "Plane", 
                 roles: ["TOURIST"],
             },
+            {
+                title: "Find Guide",
+                href: "/find-guide",
+                icon:  "Users", 
+                roles: ["TOURIST"],
+            },
         ],
     },
 ]
@@ -134,12 +140,6 @@ export const adminNavItems: NavSection[] = [
             {
                 title: "Categories",
                 href: "/admin/dashboard/categories",
-                icon: "Tag",
-                roles: ["ADMIN"],
-            },
-            {
-                title: "Tour Categories",
-                href: "/admin/dashboard/tour-category",
                 icon: "Tag",
                 roles: ["ADMIN"],
             },
