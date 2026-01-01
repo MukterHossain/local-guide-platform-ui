@@ -1,16 +1,29 @@
 import { z } from "zod";
 
 export const profileValidation = z.object({
-   experienceYears: z.number().optional(),
-   expertise: z.string().optional(),
-  feePerHour: z.number().optional(),
-  avgRating: z.number().optional(),
-  locationId: z.string().optional().nullable(),
+  image: z.string().optional(),
+  bio: z.string().optional(),
+
+  languages: z.array(z.string()).default([]),
+
+  gender: z.enum(["MALE", "FEMALE"]).optional(),
+  address: z.string().optional(),
+
+  // Guide only
+  expertise: z.string().optional(),
+  experienceYears: z.number().int().min(0).optional(),
+  dailyRate: z.number().positive().optional(),
+  locationId: z.string().nullable().optional(),
 }).optional();
 
 export const createUserValidation = z.object({
     password: z.string({
         message: "Password is required",
+    }).min(6, {
+        message: "Password is required and must be at least 6 characters long", 
+    }),
+    confirmPassword: z.string( {
+        message: "Confirm Password is required",
     }),
     name: z.string({
         message: "Name is required!",
@@ -18,18 +31,32 @@ export const createUserValidation = z.object({
     email: z.string({
         message: "Email is required!",
     }),
-    gender: z.enum(["MALE", "FEMALE"]),
-    phone: z.string({
-        message: "Contact Number is required!",
-    }),
-    languages: z.array(z.string()).optional(),
-    image: z.string().optional(),
-     bio: z.string().optional(),
-    address: z.string().optional(),
-     role: z.enum(["TOURIST", "GUIDE"]).default("TOURIST"),
-     profile: profileValidation
+  phone: z.string().optional(),
+  gender: z.enum(["MALE", "FEMALE"]).optional(),
+
+  // role: z.enum(["TOURIST", "GUIDE"]).default("TOURIST"),
+
+  // profile: profileValidation.optional(),
    
+}).refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
 });
+export const touristPreferenceValidation = z.object({
+  interests: z.array(z.string()).optional(),
+  preferredLangs: z.array(z.string()).optional(),
+  travelStyle: z.enum(["CASUAL", "ADVENTURE", "LUXURY"]),
+  groupSize: z.number().optional(),
+  travelPace: z.enum(["SLOW", "MODERATE", "FAST"]).optional(),
+});
+
+export const becomeGuideValidation = z.object({
+  expertise: z.string().min(10),
+  experienceYears: z.number().int().min(0),
+  dailyRate: z.number().positive(),
+  locationId: z.string(),
+});
+
 
 export const createAdminValidation = z.object({
   password: z.string({ message: "Password is required" }),
@@ -58,6 +85,20 @@ export const updateUserSchema = z.object({
   }).optional()
 
 });
+
+export const updateGuideProfileSchema = z.object({
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  image: z.string().optional(),
+  address: z.string().optional(),
+  bio: z.string().optional(),
+  languages: z.array(z.string()).optional(),
+  profile: z.object({
+    expertise: z.string().optional(),
+    experienceYears: z.number().optional(),
+    feePerHour: z.number().optional(),
+  }).optional()
+})
 
 
 export const adminUpdateGuideStatus = z.object({

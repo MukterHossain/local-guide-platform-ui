@@ -4,8 +4,9 @@
 
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { getCookie } from "./tokenHandlers";
-import { UserInfo } from "@/types/user.interface";
 import { serverFetch } from "@/lib/server-fetch";
+import { UserInfo } from "@/types/user.interface";
+
 
 export const getUserInfo = async (): Promise<UserInfo | any> => {
     let userInfo: UserInfo | any
@@ -38,16 +39,11 @@ export const getUserInfo = async (): Promise<UserInfo | any> => {
             }
         }
 
-        // const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as JwtPayload;
-
-        // if (!verifiedToken) {
-        //     return null;
-        // }
-
          userInfo = {
             name: result.data.admin?.name || result.data.guide?.name || result.data.tourist?.name || result.data.name || "Unknown User",
             ...result.data
         };
+
 
         return userInfo;
     } catch (error: any) {

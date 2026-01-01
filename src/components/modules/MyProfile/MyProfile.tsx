@@ -83,9 +83,9 @@ console.log("userInfo", userInfo)
             <CardContent className="flex flex-col items-center space-y-4">
               <div className="relative">
                 <Avatar className="h-32   w-32">
-                  {previewImage || userInfo?.image ? (
+                  {previewImage || userInfo?.profile?.image ? (
                     <AvatarImage
-                      src={previewImage || (userInfo?.image as string)}
+                      src={previewImage || (userInfo?.profile?.image as string)}
                       alt={userInfo.name}
                     />
                   ) : (
@@ -179,7 +179,7 @@ console.log("userInfo", userInfo)
                   <Input
                     id="address"
                     name="address"
-                    defaultValue={userInfo?.address || ""}
+                    defaultValue={userInfo?.profile?.address || ""}
                     disabled={isPending}
                   />
                 </div>
@@ -189,7 +189,7 @@ console.log("userInfo", userInfo)
                   <Input
                     id="languages"
                     name="languages"
-                    defaultValue={userInfo?.languages?.join(", ") || ""}
+                    defaultValue={userInfo?.profile?.languages?.join(", ") || ""}
                     disabled={isPending}
                   />
                 </div>               
@@ -221,12 +221,12 @@ console.log("userInfo", userInfo)
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="feePerHour">Fee per hour</Label>
+                      <Label htmlFor="dailyRate">Fee per day</Label>
                       <Input
-                        id="feePerHour"
-                        name="feePerHour"
+                        id="dailyRate"
+                        name="dailyRate"
                         type="number"
-                        defaultValue={userInfo.profile?.feePerHour || ""}
+                        defaultValue={userInfo.profile?.dailyRate || ""}
                         disabled={isPending}
                       />
                     </div>
@@ -236,7 +236,7 @@ console.log("userInfo", userInfo)
                       <select
                         id="gender"
                         name="gender"
-                        defaultValue={userInfo?.gender || "MALE"}
+                        defaultValue={userInfo?.profile?.gender || "MALE"}
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={isPending}
                       >
@@ -256,7 +256,7 @@ console.log("userInfo", userInfo)
                     id="bio"
                     name="bio"
                     rows={4}
-                    defaultValue={userInfo?.bio || ""}
+                    defaultValue={userInfo?.profile?.bio || ""}
                     disabled={isPending}
                   />
                 </div>

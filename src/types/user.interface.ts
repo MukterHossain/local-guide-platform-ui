@@ -2,78 +2,68 @@ import { UserRole } from "@/lib/auth-utils";
 import { updateUserSchema } from "@/zod/user.validation";
 import z from "zod";
 
+// TouristPreference type for frontend
+export interface TouristPreference {
+  id?: string;
+  interests?: string[];
+  travelStyle?: "CASUAL" | "ADVENTURE" | "LUXURY";
+  preferredLangs?: string[];
+  groupSize?: number | null;
+  travelPace?: "SLOW" | "MODERATE" | "FAST" | null;
+}
+
+// Nested profile structure for users
+export interface UserProfile {
+  image?: string | null;
+  bio?: string | null;
+  languages?: string[];
+  gender?: "MALE" | "FEMALE" | null;
+  address?: string | null;
+
+  // Guide-only
+  expertise?: string | null;
+  experienceYears?: number | null;
+  dailyRate?: number | null;
+  avgRating?: number | null;
+  availableStatus?: boolean | null;
+  verificationStatus?: "PENDING" | "VERIFIED" | "REJECTED";
+  adminNote?: string | null;
+  locationId?: string | null;
+}
+
+// Full user info type
 export interface UserInfo {
-    id: string;
-    name: string;
-    email: string;
-    role: UserRole;
-    gender: "MALE" | "FEMALE";
-    phone: string;
-    address: string;
-    bio: string;
-    image: string;
-    languages: string[];
-    needPasswordChange: boolean;
-    status: "ACTIVE" | "BLOCKED" | "DELETED";
-    
-    profile?: {
-    expertise?: string | null;
-    experienceYears?: number | null;
-    feePerHour?: number | null;
-    availableStatus?: boolean | null;
-    verificationStatus?: "PENDING" | "APPROVED" | "REJECTED";
-    avgRating?: number | null;
-    locationId?: string | null;
-    adminNote?: string | null;
-  } | null;
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+
+  role: UserRole;
+  status: "ACTIVE" | "BLOCKED" | "DELETED";
+  needPasswordChange: boolean;
+
+  profile?: UserProfile | null;
+  touristPreference?: TouristPreference | null;
 
   createdAt: string;
   updatedAt: string;
-
-    
 }
+
+// Guide-specific info (can be used for listings)
 export interface IUserGuide {
   id: string;
   name: string;
   email: string;
-
-  image?: string | null;
-  gender?: "MALE" | "FEMALE";
-
-  phone?: string | null;
-  bio?: string | null;
-  languages?: string[] | null;
-  address?: string | null;
-
   role: UserRole;
-  needPasswordChange: boolean;
-  status: "ACTIVE" | "BLOCKED" | "DELETED";
 
-  profile?: {
-    expertise?: string | null;
-    experienceYears?: number | null;
-    feePerHour?: number | null;
-    availableStatus?: boolean | null;
-    verificationStatus?: "PENDING" | "APPROVED" | "REJECTED";
-    avgRating?: number | null;
-    locationId?: string | null;
-    adminNote?: string | null;
-  } | null;
+  status: "ACTIVE" | "BLOCKED" | "DELETED";
+  needPasswordChange: boolean;
+
+  profile?: UserProfile | null;
 
   createdAt: string;
   updatedAt: string;
 }
 
- export type UpdateUserPayload = z.infer<typeof updateUserSchema>
-//   {
-//   name?: string;
-//   phone?: string;
-//   address?: string;
-//   bio?: string;
-//   languages?: string[];
-//   profile?: {
-//     expertise?: string;
-//     experienceYears?: number;
-//     feePerHour?: number;
-//   };
-// };
+// Type for updating user payload based on zod schema
+export type UpdateUserPayload = z.infer<typeof updateUserSchema>;

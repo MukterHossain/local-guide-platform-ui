@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { deleteLocation } from "@/services/admin/locationManagement";
 
 
 
@@ -13,6 +12,7 @@ import { IUserGuide } from "@/types/user.interface";
 import GuideColumns from "./GuideColumns";
 import GuideViewFormDialog from "./GuideViewFormDialog";
 import GuideStatusFormDialog from "./GuideStatusFormDialog";
+import { deleteUser } from "@/services/admin/userManagement";
 
 
 interface GuideTableProps {
@@ -54,7 +54,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     if (!deletingGuide) return;
 
     setIsDeleting(true);
-    const result = await deleteLocation(deletingGuide.id!);
+    const result = await deleteUser(deletingGuide.id!);
     setIsDeleting(false);
 
     if (result.success) {

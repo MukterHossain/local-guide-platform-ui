@@ -8,7 +8,7 @@ import { createUserValidation } from "@/zod/user.validation";
 
 
 
-export const registerUser = async (_currentState: any, formData: any): Promise<any> => {
+export const createBecomeGuide = async (_currentState: any, formData: any): Promise<any> => {
   try {
     const payload: any = {
       name: formData.get('name'),

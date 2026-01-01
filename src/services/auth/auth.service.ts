@@ -30,24 +30,33 @@ export async function updateMyProfile(formData: FormData) {
     try {
 
         const data: any = {};
+        const profile: any = {};
         formData.forEach((value, key) => {
-            if (key === "languages") {
-                data[key] = value?.toString()?.split(",").map(l => l.trim()).filter(Boolean);
-            } else if (
-                ["expertise", "experienceYears", "feePerHour"].includes(key)
+            if (!value || key === "file") return;
+            if (
+                [
+                    "bio",
+                    "address",
+                    "gender",
+                    "expertise",
+                    "experienceYears",
+                    "dailyRate",
+                    "locationId",].includes(key)
             ) {
-                data.profile = data.profile || {};
-                if (key === "experienceYears" || key === "feePerHour") {
-                    data.profile[key] = Number(value);
-                } else {
-                    data.profile[key] = value.toString();
-                }
-
-            } else if (key !== "file" && value) {
+                profile[key] = key === "experienceYears" || key === "dailyRate" ? Number(value) : value.toString();
+            }
+            else if (key === "languages") {
+                profile.languages = value.toString().split(",").map(l => l.trim()).filter(Boolean);
+            }
+            else {
                 data[key] = value.toString();
             }
+
         });
 
+        if (Object.keys(profile).length > 0) {
+            data.profile = profile;
+        }
 
         const uploadFormData = new FormData();
 
@@ -56,36 +65,36 @@ export async function updateMyProfile(formData: FormData) {
         uploadFormData.append('data', JSON.stringify(data));
 
         // Build validation payload
-        const validationPayload: UpdateUserPayload = {
-            name: formData.get("name")?.toString(),
-            phone: formData.get("phone")?.toString(),
-            address: formData.get("address")?.toString(),
-            bio: formData.get("bio")?.toString(),
-            languages:
-                formData.get("languages")
-                    ?.toString()
-                    ?.split(",")
-                    .filter(Boolean) || undefined,
-        };
+        // const validationPayload: UpdateUserPayload = {
+        //     name: formData.get("name")?.toString(),
+        //     phone: formData.get("phone")?.toString(),
+        //     address: formData.get("address")?.toString(),
+        //     bio: formData.get("bio")?.toString(),
+        //     languages:
+        //         formData.get("languages")
+        //             ?.toString()
+        //             ?.split(",")
+        //             .filter(Boolean) || undefined,
+        // };
 
-        const validation = zodValidator(validationPayload, updateUserSchema);
+        // const validation = zodValidator(validationPayload, updateUserSchema);
 
-        if (!validation.success && validation.errors) {
-            return {
-                success: false,
-                message: "Validation failed",
-                formData: validationPayload,
-                errors: validation.errors,
-            }
-        }
+        // if (!validation.success && validation.errors) {
+        //     return {
+        //         success: false,
+        //         message: "Validation failed",
+        //         formData: validationPayload,
+        //         errors: validation.errors,
+        //     }
+        // }
         // Add the file if it exists
         const file = formData.get('file');
         if (file && file instanceof File && file.size > 0) {
             uploadFormData.append('file', file);
         }
 
-        const response = await serverFetch.patch(`/user/update-profile`, {
-            method: "PATCH",
+        const response = await serverFetch.patch(`/user/me/profile`, {
+            // method: "PATCH",
             body: uploadFormData,
         });
 
@@ -102,90 +111,6 @@ export async function updateMyProfile(formData: FormData) {
     }
 }
 
-// Reset Password
-// export async function resetPassword(_prevState: any, formData: FormData) {
-
-//     const redirectTo = formData.get('redirect') || null;
-
-//     // Build validation payload
-//     const validationPayload = {
-//         newPassword: formData.get("newPassword") as string,
-//         confirmPassword: formData.get("confirmPassword") as string,
-//     };
-
-//     // Validate
-//     const validatedPayload = zodValidator(validationPayload, resetPasswordSchema);
-
-//     if (!validatedPayload.success && validatedPayload.errors) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//             formData: validationPayload,
-//             errors: validatedPayload.errors,
-//         };
-//     }
-
-//     try {
-
-//         const accessToken = await getCookie("accessToken");
-
-//         if (!accessToken) {
-//             throw new Error("User not authenticated");
-//         }
-//         // console.log("accessToken", accessToken)
-//         const verifiedToken = jwt.verify(accessToken as string, process.env.JWT_SECRET!) as jwt.JwtPayload;
-//         // console.log("verifiedToken", verifiedToken)
-//         const userRole: UserRole = verifiedToken.role;
-
-//         const user = await getUserInfo();
-//         // API Call
-//         const response = await serverFetch.post("/auth/change-password", {
-//             body: JSON.stringify({
-//                 id: user?.id,
-//                 password: validationPayload.newPassword,
-//             }),
-//             headers: {
-//                 "Authorization": accessToken,
-//                 "Content-Type": "application/json",
-//             },
-//         });
-
-//         const result = await response.json();
-
-//         if (!result.success) {
-//             throw new Error(result.message || "Reset password failed");
-//         }
-
-//         if (result.success) {
-//             // await get******************
-//             revalidateTag("user-info", { expire: 0 });
-//         }
-//         // console.log("resetPassword", result)
-
-//         if (redirectTo) {
-//             const requestedPath = redirectTo.toString();
-//             if (isValidRedirectForRole(requestedPath, userRole)) {
-//                 redirect(`${requestedPath}?loggedIn=true`);
-//             } else {
-//                 redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
-//             }
-//         } else {
-//             redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
-//         }
-
-
-//     } catch (error: any) {
-//         // Re-throw NEXT_REDIRECT errors so Next.js can handle them
-//         if (error?.digest?.startsWith("NEXT_REDIRECT")) {
-//             throw error;
-//         }
-//         return {
-//             success: false,
-//             message: error?.message || "Something went wrong",
-//             formData: validationPayload,
-//         };
-//     }
-// }
 
 export async function getNewAccessToken() {
     try {

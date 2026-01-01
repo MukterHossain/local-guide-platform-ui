@@ -11,8 +11,8 @@ import { registerUser } from "@/services/auth/registerUser";
 
 const RegisterForm = () => {
   const [state, formAction, isPending] = useActionState(registerUser, null);
-  const [role, setRole] = useState("TOURIST");
-  const [gender, setGender] = useState("MALE");
+  // const [role, setRole] = useState("TOURIST");
+  // const [gender, setGender] = useState("MALE");
   console.log(state, "state");
 
   useEffect(() => {
@@ -20,6 +20,8 @@ const RegisterForm = () => {
       toast.error(state.message);
     }
   }, [state]);
+
+  console.log("create user", state)
 
   return (
     <form action={formAction} >
@@ -43,74 +45,16 @@ const RegisterForm = () => {
             />
             <InputFieldError field="email" state={state} />
           </Field>
-          {/* Address */}
-          <Field>
-            <FieldLabel htmlFor="address">Address</FieldLabel>
-            <Input
-              id="address"
-              name="address"
-              type="text"
-              placeholder="123 Main St"
-            />
-            <InputFieldError field="address" state={state} />
-          </Field>
-          {/* phone */}
-          <Field>
-            <FieldLabel htmlFor="role">Role</FieldLabel>
-            <select name="role"
-              className="border rounded p-2"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}>
-              <option value="TOURIST">Tourist</option>
-              <option value="GUIDE">Guide</option>
-            </select>
-            <InputFieldError field="role" state={state} />
-          </Field>
           {/* Gender */}
           <Field>
             <FieldLabel htmlFor="gender">Gender</FieldLabel>
-            <select name="gender"
-              className="border rounded p-2"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}>
+            <select name="gender" className="border rounded p-2">
+              <option value="">Select</option>
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
             </select>
             <InputFieldError field="gender" state={state} />
           </Field>
-          <Field>
-            <FieldLabel>Languages (comma separated)</FieldLabel>
-            <Input name="languages" placeholder="English,Bangla" />
-
-          </Field>
-          <InputFieldError field="languages" state={state} />
-          <Field>
-            <FieldLabel>Bio</FieldLabel>
-            <Input name="bio" />
-            <InputFieldError field="bio" state={state} />
-
-          </Field>
-          {role === "GUIDE" && (
-            <>
-            <Field>
-                <FieldLabel>expertise </FieldLabel>
-                <Input type="text" name="expertise" />
-                <InputFieldError field="expertise" state={state} />
-              </Field>
-
-              <Field>
-                <FieldLabel>Experience (Years)</FieldLabel>
-                <Input type="number" name="experienceYears" />
-                <InputFieldError field="experienceYears" state={state} />
-              </Field>              
-
-              <Field>
-                <FieldLabel>Fee Per Hour</FieldLabel>
-                <Input type="number" name="feePerHour" />
-                <InputFieldError field="feePerHour" state={state} />
-              </Field>
-            </>
-          )}
           {/* phone */}
           <Field>
             <FieldLabel htmlFor="phone">Phone</FieldLabel>
@@ -131,7 +75,7 @@ const RegisterForm = () => {
             <InputFieldError field="password" state={state} />
           </Field>
           {/* Confirm Password */}
-          <Field className="md:col-span-2">
+          <Field className="">
             <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
             <Input
               id="confirmPassword"
