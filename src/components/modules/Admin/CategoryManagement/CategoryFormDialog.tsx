@@ -53,7 +53,7 @@ const CategoryFormDialog = ({
           <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
             {/* City */}
             <Field>
-              <FieldLabel htmlFor="name">City</FieldLabel>
+              <FieldLabel htmlFor="name">Category name</FieldLabel>
               <Input
                 id="name"
                 name="name"

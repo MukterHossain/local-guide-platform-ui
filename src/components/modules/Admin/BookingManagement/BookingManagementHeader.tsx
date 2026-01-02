@@ -36,15 +36,7 @@ const BookingManagementHeader = () => {
         onSuccess={handleSuccess}
       /> */}
 
-      <ManagementPageHeader
-        title="Booking Management"
-        description="Create and manage bookings."
-        action={{
-          label: "Create Booking",
-          icon: Plus,
-          onClick: handleOpenDialog,
-        }}
-      />
+    
     </>
     );
     

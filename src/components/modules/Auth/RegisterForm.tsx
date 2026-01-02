@@ -45,7 +45,7 @@ const RegisterForm = () => {
             />
             <InputFieldError field="email" state={state} />
           </Field>
-          {/* Gender */}
+          {/* Gender
           <Field>
             <FieldLabel htmlFor="gender">Gender</FieldLabel>
             <select name="gender" className="border rounded p-2">
@@ -54,7 +54,7 @@ const RegisterForm = () => {
               <option value="FEMALE">Female</option>
             </select>
             <InputFieldError field="gender" state={state} />
-          </Field>
+          </Field> */}
           {/* phone */}
           <Field>
             <FieldLabel htmlFor="phone">Phone</FieldLabel>
@@ -75,7 +75,7 @@ const RegisterForm = () => {
             <InputFieldError field="password" state={state} />
           </Field>
           {/* Confirm Password */}
-          <Field className="">
+          <Field className="md:col-span-2">
             <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
             <Input
               id="confirmPassword"

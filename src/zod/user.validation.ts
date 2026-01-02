@@ -5,9 +5,8 @@ export const profileValidation = z.object({
   bio: z.string().optional(),
 
   languages: z.array(z.string()).default([]),
-
+address: z.string().optional(),
   gender: z.enum(["MALE", "FEMALE"]).optional(),
-  address: z.string().optional(),
 
   // Guide only
   expertise: z.string().optional(),
@@ -17,30 +16,31 @@ export const profileValidation = z.object({
 }).optional();
 
 export const createUserValidation = z.object({
-    password: z.string({
-        message: "Password is required",
-    }).min(6, {
-        message: "Password is required and must be at least 6 characters long", 
-    }),
-    confirmPassword: z.string( {
-        message: "Confirm Password is required",
-    }),
-    name: z.string({
-        message: "Name is required!",
-    }),
-    email: z.string({
-        message: "Email is required!",
-    }),
+  name: z.string({
+    message: "Name is required!",
+  }),
+  email: z.string({
+    message: "Email is required!",
+  }),
   phone: z.string().optional(),
-  gender: z.enum(["MALE", "FEMALE"]).optional(),
+  password: z.string({
+    message: "Password is required",
+  }).min(6, {
+    message: "Password is required and must be at least 6 characters long",
+  }),
+  confirmPassword: z.string({
+    message: "Confirm Password is required",
+  }),
+
+  // gender: z.enum(["MALE", "FEMALE"]).optional(),
 
   // role: z.enum(["TOURIST", "GUIDE"]).default("TOURIST"),
 
   // profile: profileValidation.optional(),
-   
+
 }).refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords do not match",
+  path: ["confirmPassword"],
+  message: "Passwords do not match",
 });
 export const touristPreferenceValidation = z.object({
   interests: z.array(z.string()).optional(),
@@ -54,9 +54,22 @@ export const becomeGuideValidation = z.object({
   expertise: z.string().min(10),
   experienceYears: z.number().int().min(0),
   dailyRate: z.number().positive(),
-  locationId: z.string(),
+  locationId: z.string().refine(val => val !== "0", {
+    message: "Location is required",
+  })
 });
 
+
+
+
+export const updateUserValidation = z.object({
+ name: z.string().optional(),
+  phone: z.string().optional(),
+  
+
+  profile: profileValidation.optional(),
+  touristPreference: touristPreferenceValidation.optional(),
+});
 
 export const createAdminValidation = z.object({
   password: z.string({ message: "Password is required" }),
@@ -68,37 +81,39 @@ export const createAdminValidation = z.object({
   phone: z.string({ message: "Contact Number is required" }),
   image: z.string().optional(),
   address: z.string().optional(),
-  role: z.enum(["ADMIN"]), 
+  role: z.enum(["ADMIN"]),
 });
 
-export const updateUserSchema = z.object({
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  image: z.string().optional(),
-  address: z.string().optional(),
-  bio: z.string().optional(),
-  languages: z.array(z.string()).optional(),
-    profile: z.object({
-    expertise: z.string().optional(),
-    experienceYears: z.number().optional(),
-    feePerHour: z.number().optional(),
-  }).optional()
+// export const updateUserSchema = z.object({
+//   name: z.string().optional(),
+//   phone: z.string().optional(),
+//   image: z.string().optional(),
+//   address: z.string().optional(),
+//   bio: z.string().optional(),
+//   languages: z.array(z.string()).optional(),
+//   profile: z.object({
+//     expertise: z.string().optional(),
+//     experienceYears: z.number().optional(),
+//     feePerHour: z.number().optional(),
+//   }).optional()
 
-});
+// });
 
-export const updateGuideProfileSchema = z.object({
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  image: z.string().optional(),
-  address: z.string().optional(),
-  bio: z.string().optional(),
-  languages: z.array(z.string()).optional(),
-  profile: z.object({
-    expertise: z.string().optional(),
-    experienceYears: z.number().optional(),
-    feePerHour: z.number().optional(),
-  }).optional()
-})
+
+
+// export const updateGuideProfileSchema = z.object({
+//   name: z.string().optional(),
+//   phone: z.string().optional(),
+//   image: z.string().optional(),
+//   address: z.string().optional(),
+//   bio: z.string().optional(),
+//   languages: z.array(z.string()).optional(),
+//   profile: z.object({
+//     expertise: z.string().optional(),
+//     experienceYears: z.number().optional(),
+//     feePerHour: z.number().optional(),
+//   }).optional()
+// })
 
 
 export const adminUpdateGuideStatus = z.object({

@@ -9,7 +9,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
 import { deleteCookie, getCookie, setCookie } from "./tokenHandlers";
-import { updateUserSchema } from "@/zod/user.validation";
+import { updateUserValidation } from "@/zod/user.validation";
 import { UpdateUserPayload } from "@/types/user.interface";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -65,28 +65,36 @@ export async function updateMyProfile(formData: FormData) {
         uploadFormData.append('data', JSON.stringify(data));
 
         // Build validation payload
-        // const validationPayload: UpdateUserPayload = {
-        //     name: formData.get("name")?.toString(),
-        //     phone: formData.get("phone")?.toString(),
-        //     address: formData.get("address")?.toString(),
-        //     bio: formData.get("bio")?.toString(),
-        //     languages:
-        //         formData.get("languages")
-        //             ?.toString()
-        //             ?.split(",")
-        //             .filter(Boolean) || undefined,
-        // };
+        const validationPayload: UpdateUserPayload = {
+            name: formData.get("name")?.toString(),
+            phone: formData.get("phone")?.toString(),
+            profile: {
+                bio: formData.get("bio")?.toString(),
+                address: formData.get("address")?.toString(),
+                languages: (formData.get("languages")?.toString().split(",").map(l => l.trim()).filter(Boolean) || []),
+                gender: formData.get("gender")?.toString() as "MALE" | "FEMALE" | undefined,
+                expertise: formData.get("expertise")?.toString(),
+                experienceYears: formData.get("experienceYears") ? Number(formData.get("experienceYears")) : undefined,
+                dailyRate: formData.get("dailyRate") ? Number(formData.get("dailyRate")) : undefined,
+                locationId: formData.get("locationId")?.toString(),                
+            },
+            touristPreference: {    
+                interests: formData.get("interests") ? formData.get("interests")?.toString().split(",").map((i) => i.trim()).filter(Boolean) : undefined,
+                travelStyle: formData.get("travelStyle") ? formData.get("travelStyle")!.toString() as "CASUAL" | "ADVENTURE" | "LUXURY" : ("CASUAL" as "CASUAL" | "ADVENTURE" | "LUXURY"),
+                preferredLangs: formData.get("preferredLangs") ? formData.get("preferredLangs")?.toString().split(",").map((l) => l.trim()).filter(Boolean) : undefined,       
+             }
+        };
 
-        // const validation = zodValidator(validationPayload, updateUserSchema);
+        const validation = zodValidator(validationPayload, updateUserValidation);
 
-        // if (!validation.success && validation.errors) {
-        //     return {
-        //         success: false,
-        //         message: "Validation failed",
-        //         formData: validationPayload,
-        //         errors: validation.errors,
-        //     }
-        // }
+        if (!validation.success && validation.errors) {
+            return {
+                success: false,
+                message: "Validation failed",
+                formData: validationPayload,
+                errors: validation.errors,
+            }
+        }
         // Add the file if it exists
         const file = formData.get('file');
         if (file && file instanceof File && file.size > 0) {

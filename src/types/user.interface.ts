@@ -1,5 +1,5 @@
 import { UserRole } from "@/lib/auth-utils";
-import { updateUserSchema } from "@/zod/user.validation";
+import { updateUserValidation } from "@/zod/user.validation";
 import z from "zod";
 
 // TouristPreference type for frontend
@@ -66,4 +66,4 @@ export interface IUserGuide {
 }
 
 // Type for updating user payload based on zod schema
-export type UpdateUserPayload = z.infer<typeof updateUserSchema>;
+export type UpdateUserPayload = z.infer<typeof updateUserValidation>;

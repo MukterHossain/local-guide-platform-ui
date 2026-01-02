@@ -17,8 +17,8 @@ export const registerUser = async (_currentState: any, formData: any): Promise<a
       confirmPassword: formData.get('confirmPassword'),
     };
 
-    const gender = formData.get('gender');
-    if (gender) payload.gender = gender;
+    // const gender = formData.get('gender');
+    // if (gender) payload.gender = gender;
 
     const phone = formData.get('phone');
     if (phone) payload.phone = phone;

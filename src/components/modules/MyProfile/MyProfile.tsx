@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getInitials } from "@/lib/formatters";
@@ -16,16 +17,17 @@ import { toast } from "sonner";
 
 interface MyProfileProps {
   userInfo: UserInfo;
+  locations?: { id: string; city: string }[];
 }
 
-const MyProfile = ({ userInfo }: MyProfileProps) => {
+const MyProfile = ({ userInfo, locations}: MyProfileProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
- 
+
 
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +51,11 @@ const MyProfile = ({ userInfo }: MyProfileProps) => {
     startTransition(async () => {
       const result = await updateMyProfile(formData);
 
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
       if (result.success) {
         setSuccess(result.message);
         setPreviewImage(null);
@@ -61,7 +68,7 @@ const MyProfile = ({ userInfo }: MyProfileProps) => {
     });
   };
 
-console.log("userInfo", userInfo)
+  console.log("userInfo", userInfo)
 
   return (
     <div className="space-y-6">
@@ -111,6 +118,7 @@ console.log("userInfo", userInfo)
                 </label>
               </div>
 
+
               <div className="text-center">
                 <p className="font-semibold text-lg">{userInfo.name}</p>
                 <p className="text-sm text-muted-foreground">
@@ -153,6 +161,7 @@ console.log("userInfo", userInfo)
                   />
                 </div>
 
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -163,7 +172,6 @@ console.log("userInfo", userInfo)
                     className="bg-muted"
                   />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="phone">Contact Number</Label>
                   <Input
@@ -192,7 +200,64 @@ console.log("userInfo", userInfo)
                     defaultValue={userInfo?.profile?.languages?.join(", ") || ""}
                     disabled={isPending}
                   />
-                </div>               
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="gender">Gender</Label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    defaultValue={userInfo?.profile?.gender || "MALE"}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isPending}
+                  >
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                  </select>
+                </div>
+
+                {userInfo.role === "GUIDE" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="locationId">Location</Label>
+                    <select
+                      id="locationId"
+                      name="locationId"
+                      defaultValue={userInfo.profile?.locationId || ""}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      disabled={isPending}
+                    >
+                      <option value="">Select Location</option>
+                      {locations?.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+
+                {/* Tourist section */}
+                {userInfo.touristPreference && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>Interests</Label>
+                      <Input
+                        name="interests"
+                        defaultValue={userInfo.touristPreference.interests?.join(", ")}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Travel Style</Label>
+                      <select name="travelStyle">
+                        <option value="CASUAL">Casual</option>
+                        <option value="ADVENTURE">Adventure</option>
+                        <option value="LUXURY">Luxury</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
 
                 {/* Guide-Specific Fields */}
                 {userInfo.role === "GUIDE" && (
@@ -203,9 +268,21 @@ console.log("userInfo", userInfo)
                         id="expertise"
                         name="expertise"
                         defaultValue={userInfo.profile?.expertise || ""}
-                        disabled={isPending}
+                      // disabled={isPending}
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="verificationStatus">verificationStatus</Label>
+                      <Input
+                        id="verificationStatus"
+                        name="verificationStatus"
+                        value={userInfo?.profile?.verificationStatus}
+                        disabled
+                    className="bg-muted"
+
+                      />
+                    </div>
+
 
                     <div className="space-y-2">
                       <Label htmlFor="experienceYears">
@@ -215,7 +292,7 @@ console.log("userInfo", userInfo)
                         id="experienceYears"
                         name="experienceYears"
                         type="number"
-                        defaultValue={userInfo.profile?.experienceYears  || ""}
+                        defaultValue={userInfo.profile?.experienceYears || ""}
                         disabled={isPending}
                       />
                     </div>
@@ -227,39 +304,27 @@ console.log("userInfo", userInfo)
                         name="dailyRate"
                         type="number"
                         defaultValue={userInfo.profile?.dailyRate || ""}
-                        disabled={isPending}
+                      // disabled={isPending}
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="gender">Gender</Label>
-                      <select
-                        id="gender"
-                        name="gender"
-                        defaultValue={userInfo?.profile?.gender || "MALE"}
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        disabled={isPending}
-                      >
-                        <option value="MALE">Male</option>
-                        <option value="FEMALE">Female</option>
-                      </select>
-                    </div>
+
                   </>
                 )}
-                
-                
+
+
               </div>
               <div className="space-y-2 ">
-                  <Label htmlFor="bio">Bio</Label>
-                  <textarea
-                    className="border w-full border-gray-300 p-2 rounded-md "
-                    id="bio"
-                    name="bio"
-                    rows={4}
-                    defaultValue={userInfo?.profile?.bio || ""}
-                    disabled={isPending}
-                  />
-                </div>
+                <Label htmlFor="bio">Bio</Label>
+                <textarea
+                  className="border w-full border-gray-300 p-2 rounded-md "
+                  id="bio"
+                  name="bio"
+                  rows={4}
+                  defaultValue={userInfo?.profile?.bio || ""}
+                  disabled={isPending}
+                />
+              </div>
 
               <div className="flex justify-end pt-4">
                 <Button type="submit" disabled={isPending}>

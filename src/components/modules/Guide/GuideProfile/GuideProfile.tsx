@@ -63,56 +63,56 @@ const GuideProfile = ({ guide }: Props) => {
                         <Input
                             id="phone"
                             name="phone"
-                            defaultValue={state?.formData?.phone || guide?.phone}
+                            defaultValue={state?.formData?.phone }
                         />
                     </Field>
                     {/* gender */}
-                    <Field>
+                    {/* <Field>
                         <FieldLabel>Gender</FieldLabel>
                         <select
                             name="gender"
-                            defaultValue={guide?.gender}
+                            defaultValue={guide?.profile?.}
                             className="border rounded p-2 w-full"
                         >
                             <option value="">Select</option>
                             <option value="MALE">Male</option>
                             <option value="FEMALE">Female</option>
                         </select>
-                    </Field>
+                    </Field> */}
 
                     {/* address */}
-                    <Field>
+                    {/* <Field>
                         <FieldLabel htmlFor="address">Address</FieldLabel>
                         <Input
                             id="address"
                             name="address"
                             defaultValue={state?.formData?.address || guide?.address}
                         />
-                    </Field>
+                    </Field> */}
 
                     {/* bio */}
-                    <Field>
+                    {/* <Field>
                         <FieldLabel htmlFor="bio">Bio</FieldLabel>
                         <Input
                             id="bio"
                             name="bio"
                             defaultValue={state?.formData?.bio || guide?.bio}
                         />
-                    </Field>
+                    </Field> */}
 
                     {/* languages */}
-                    <Field>
+                    {/* <Field>
                         <FieldLabel>Languages</FieldLabel>
                         <Input
                             name="languages"
                             placeholder="English, Bangla, Hindi"
                             defaultValue={guide?.languages?.join(", ")}
                         />
-                    </Field>
+                    </Field> */}
 
 
                     {/* Profile Image */}
-                    <Field>
+                    {/* <Field>
                         {(selectedFile || guide?.image) && (
                             <div className="mb-2">
                                 <Image
@@ -137,7 +137,7 @@ const GuideProfile = ({ guide }: Props) => {
                             accept="image/*"
                             onChange={handleFileChange}
                         />
-                    </Field>
+                    </Field> */}
                     
                     {/* Guide Profile */}
                     {guide?.profile && (
@@ -179,13 +179,13 @@ const GuideProfile = ({ guide }: Props) => {
                             {/* feePerHour */}
                             <Field>
                                 <FieldLabel htmlFor="feePerHour">Fee Per Hour</FieldLabel>
-
+{/* 
                                 <Input
                                     id="feePerHour"
                                     type='number'
                                     name="feePerHour"
                                     defaultValue={state?.formData?.feePerHour || guide?.profile?.feePerHour}
-                                />
+                                /> */}
                             </Field>
                         </div>
                     )}

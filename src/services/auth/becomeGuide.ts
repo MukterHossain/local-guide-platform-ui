@@ -4,43 +4,43 @@
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { loginUser } from "./loginUser";
-import { createUserValidation } from "@/zod/user.validation";
+import { becomeGuideValidation} from "@/zod/user.validation";
+import { redirect } from "next/navigation";
 
 
 
 export const createBecomeGuide = async (_currentState: any, formData: any): Promise<any> => {
   try {
     const payload: any = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      confirmPassword: formData.get('confirmPassword'),
+      
+      expertise: formData.get('expertise')?.toString(),
+        experienceYears: Number(formData.get('experienceYears')),
+        dailyRate: Number(formData.get('dailyRate')),
+        locationId: formData.get('locationId')?.toString(),
     };
 
-    const gender = formData.get('gender');
-    if (gender) payload.gender = gender;
-
-    const phone = formData.get('phone');
-    if (phone) payload.phone = phone;
-
-    const validation = zodValidator(payload, createUserValidation);
+    const validation = zodValidator(payload, becomeGuideValidation);
 
     if (!validation.success) {
       return validation;
     }
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("data", JSON.stringify(payload));
-    const res = await serverFetch.post("/user/register", {
-      body: formDataToSend
+    // const formDataToSend = new FormData();
+    // formDataToSend.append("data", JSON.stringify(payload));
+    const res = await serverFetch.post("/user/become-guide", {
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
     console.log(res, "res");
     const result = await res.json()
-    if (result.success) {
-      await loginUser(_currentState, formData);
+    if (!result.success) {
+      return result;  
     }
     console.log("result from server", result)
-    return result;
+    redirect('/guide/dashboard');
+    // return result;
 
 
 

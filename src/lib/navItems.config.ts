@@ -99,6 +99,12 @@ export const touristNavItems: NavSection[] = [
                 icon:  "Users", 
                 roles: ["TOURIST"],
             },
+            {
+                title: "Become a Guide",
+                href: "/become-guide",
+                icon:  "UserPlus", 
+                roles: ["TOURIST"],
+            },
         ],
     },
 ]
