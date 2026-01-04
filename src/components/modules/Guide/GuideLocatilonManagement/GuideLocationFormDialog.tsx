@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { createGuideLocation, getLocationForGuideLocation } from "@/services/guide/guideAvailableLoacation";
+import { createGuideLocation, getAllGuideLocations, getLocationForGuideLocation } from "@/services/guide/guideAvailableLoacation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -44,7 +44,8 @@ const GuideLocationFormDialog = ({
 
   useEffect(() => {
     async function fetchLocations() {
-      const res = await getLocationForGuideLocation();
+      const res = await getAllGuideLocations();
+      // const res = await getLocationForGuideLocation();
       if (res?.success) {
         setLocations(res.data);
       }
@@ -58,6 +59,8 @@ const GuideLocationFormDialog = ({
   };
 
 
+  console.log("locations Form", locations)
+  console.log("location state", state)
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -75,21 +78,25 @@ const GuideLocationFormDialog = ({
             {/* Location */}
             <Field>
               <FieldLabel htmlFor="locationId">Location</FieldLabel>
-              <select
-                name="locationId"
-                className="border text-black rounded p-2 w-full"
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  Select location
-                </option>
-
-                {locations.map((loc) => (
-                  <option key={loc.id} value={loc.id}>
-                    {loc.city}
+              {locations.length > 0 ? (
+                <select
+                  name="locationId"
+                  className="border text-black rounded p-2 w-full"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select location
                   </option>
-                ))}
-              </select>
+
+                  {locations.map((loc) => (
+                    <option key={loc.id} value={loc.id}>
+                      {loc.city} - {loc.country}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-sm text-gray-500">No locations available</p>
+              )}
 
               <InputFieldError field="locationId" state={state} />
             </Field>

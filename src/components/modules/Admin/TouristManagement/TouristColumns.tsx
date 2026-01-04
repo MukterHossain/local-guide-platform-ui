@@ -27,7 +27,7 @@ const TouristColumns:Column<UserInfo>[] = [
   },
   {
     header: "Gender",
-    accessor: (user) => user.gender,
+    accessor: (user) => user.profile?.gender || "N/A",
   },
   {
     header: "Created At",

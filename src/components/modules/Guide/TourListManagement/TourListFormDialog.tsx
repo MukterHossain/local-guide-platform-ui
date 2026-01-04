@@ -29,7 +29,13 @@ const TourListFormDialog = ({
     const [state, formAction, isPending] = useActionState(createTourList, null);
 
     const [locations, setLocations] = useState<any[]>([]);
-    const [category, setCategory] = useState<any[]>([]);
+    // const [category, setCategory] = useState<any[]>([]);
+    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+
+
     useEffect(() => {
         if (state?.success) {
             toast.success(state.message || "Tour list created successfully");
@@ -56,7 +62,7 @@ const TourListFormDialog = ({
         async function fetchCategories() {
             const res = await getCategoryForTourList();
             if (res?.success) {
-                setCategory(res.data);
+                setCategories(res.data);
             }
         }
         fetchCategories();
@@ -64,6 +70,7 @@ const TourListFormDialog = ({
 
     const handleClose = () => {
         formRef.current?.reset();
+        setSelectedCategories([]);
         onClose();
     };
     console.log("Create tour", state)
@@ -91,15 +98,82 @@ const TourListFormDialog = ({
                             />
                             <InputFieldError field="title" state={state} />
                         </Field>
+                        {/* Categories as Dialog */}
                         <Field>
-                            {/* Categories */}
-                            <FieldLabel>Categories</FieldLabel>
-                            <select name="categories" multiple required className="w-full border rounded p-2">
-                                {category?.map(cat => (
-                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                ))}
-                            </select>
+                            <div className="flex items-center justify-between mb-2">
+                                <FieldLabel>Categories</FieldLabel>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setCategoryDialogOpen(true)}
+                                >
+                                    Select Categories
+                                </Button>
+                            </div>
+
+
+                            <div className="flex gap-2 flex-wrap mb-2">
+                                {selectedCategories.map(catId => {
+                                    const cat = categories.find(c => c.id === catId);
+                                    return (
+                                        <span
+                                            key={catId}
+                                            className="px-3 py-1 rounded-full bg-muted text-sm"
+                                        >
+                                            {cat?.name}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+
+
+                            {/* Hidden input to submit form */}
+                            {selectedCategories.map(id => (
+                                <input key={id} type="hidden" name="categories" value={id} />
+                            ))}
                             <InputFieldError field="categories" state={state} />
+
+                            {/* Category selection Dialog */}
+                            <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
+                                <DialogContent className="max-h-64 overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Select Categories</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        {categories.map(cat => (
+                                            <label
+                                                key={cat.id}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    value={cat.id}
+                                                    checked={selectedCategories.includes(cat.id)}
+                                                    onChange={(e) => {
+                                                        setSelectedCategories(prev =>
+                                                            e.target.checked
+                                                                ? [...prev, cat.id]
+                                                                : prev.filter(id => id !== cat.id)
+                                                        );
+                                                    }}
+                                                />
+                                                {cat.name}
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <div className="flex justify-end gap-2 pt-4">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setCategoryDialogOpen(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button onClick={() => setCategoryDialogOpen(false)}>
+                                            Save
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </Field>
                         {/* city */}
                         <Field>
@@ -113,7 +187,7 @@ const TourListFormDialog = ({
 
                                 {locations.map((loc) => (
                                     <option key={loc.id} value={loc.city}>
-                                        {loc.city}
+                                        {loc.city} - {loc.country}
                                     </option>
                                 ))}
                             </select>
@@ -135,7 +209,7 @@ const TourListFormDialog = ({
 
                         {/* tourFee */}
                         <Field>
-                            <FieldLabel htmlFor="tourFee">Tour Fee</FieldLabel>
+                            <FieldLabel htmlFor="tourFee">Tour Fee (daily)</FieldLabel>
                             <Input
                                 id="tourFee"
                                 name="tourFee"

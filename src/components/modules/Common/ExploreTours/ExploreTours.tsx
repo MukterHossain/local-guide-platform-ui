@@ -9,9 +9,13 @@ const ExploreTours =async () => {
     return (
         <div className="container mx-auto px-4">
             <h1 className="text-2xl font-bold mb-4 text-center">ExploreTours</h1>
+            {
+                tourLists?.error && <p className="text-red-500">Explor Tours not found</p>
+            }
             <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
+
                 {
-                    tourLists?.data.map((tourList: ITourList) => (
+                    tourLists?.data?.map((tourList: ITourList) => (
                         <ExploreToursCard key={tourList.id} tour={tourList}></ExploreToursCard>
                     ))
                 }

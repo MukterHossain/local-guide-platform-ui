@@ -39,7 +39,7 @@ const GuideColumns: Column<IUserGuide>[] = [
   },
   {
     header: "Gender",
-    accessor: (user) => user.gender,
+    accessor: (user) => user?.profile?.gender,
     sortKey: "role",
   },
   {

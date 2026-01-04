@@ -58,7 +58,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                         // ✅ Multiple Images (Carousel)
                         <Carousel className="w-full h-full">
                             <CarouselContent>
-                                {images.map((image, index) => (
+                                {images?.map((image, index) => (
                                     <CarouselItem key={index}>
                                         <Image
                                             src={image}

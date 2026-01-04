@@ -47,6 +47,8 @@ const GuideLocationTable = ({guideLocations}: GuideLocationTableProps) => {
       toast.error(result.message || "Failed to delete guide");
     }
   };
+
+  console.log("guideLocations Table", guideLocations)
     return (
          <>
       <ManagementTable

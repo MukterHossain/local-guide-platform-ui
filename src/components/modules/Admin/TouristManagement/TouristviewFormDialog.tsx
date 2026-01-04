@@ -64,7 +64,7 @@ const TouristviewFormDialog = ({ open, onOpenChange, id }: IProps) => {
             width={140}
             height={140}
             alt="Guide Image"
-            src={data.image || "/avatar.jpg"}
+            src={data?.profile?.image || "/avatar.jpg"}
             className="rounded-full object-cover shadow-md border"
           />
           <h2 className="text-lg font-medium">{data.name}</h2>
@@ -74,17 +74,17 @@ const TouristviewFormDialog = ({ open, onOpenChange, id }: IProps) => {
         {/* Basic Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border">
           <InfoItem label="Phone" value={data.phone} />
-          <InfoItem label="Address" value={data.address} />
-          <InfoItem label="Gender" value={data.gender} />
+          <InfoItem label="Address" value={data?.profile?.address} />
+          <InfoItem label="Gender" value={data?.profile?.gender || "N/A"} />
           <InfoItem label="Status" value={data.status} />
           <InfoItem
             label="Languages"
-            value={data.languages?.join(", ")}
+            value={data?.profile?.languages?.join(", ")}
             className="sm:col-span-2"
           />
           <InfoItem
             label="Bio"
-            value={data.bio}
+            value={data?.profile?.bio}
             className="sm:col-span-2"
           />
         </div>

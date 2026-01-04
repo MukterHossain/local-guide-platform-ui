@@ -69,6 +69,19 @@ export async function getLocationForGuideLocation(queryString?: string) {
         };
     }
 }
+export async function getAllGuideLocations(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/location/guide-locations${queryString ? `?${queryString}` : ""}`);
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
 
 export async function getGuideLocation(queryString?: string) {
     try {

@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field } from "@/components/ui/field";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getInitials } from "@/lib/formatters";
@@ -17,15 +17,19 @@ import { toast } from "sonner";
 
 interface MyProfileProps {
   userInfo: UserInfo;
-  locations?: { id: string; city: string }[];
+  locations?: { id: string; city: string, country: string }[];
 }
 
-const MyProfile = ({ userInfo, locations}: MyProfileProps) => {
+const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isEditLocation, setIsEditLocation] = useState(false);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(
+    userInfo.guideLocations?.map(l => l.locationId) || []
+  );
 
 
 
@@ -47,6 +51,7 @@ const MyProfile = ({ userInfo, locations}: MyProfileProps) => {
     setSuccess(null);
 
     const formData = new FormData(e.currentTarget);
+    // formData.set("locationIds", JSON.stringify(selectedLocations));
 
     startTransition(async () => {
       const result = await updateMyProfile(formData);
@@ -216,43 +221,127 @@ const MyProfile = ({ userInfo, locations}: MyProfileProps) => {
                 </div>
 
                 {userInfo.role === "GUIDE" && (
+
                   <div className="space-y-2">
-                    <Label htmlFor="locationId">Location</Label>
-                    <select
-                      id="locationId"
-                      name="locationId"
-                      defaultValue={userInfo.profile?.locationId || ""}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      disabled={isPending}
+                    <input
+                      type="hidden"
+                      name="locationIds"
+                      value={selectedLocations.join(",")}
+                    />
+                    <Label>Locations</Label>
+
+                    <div className="flex flex-wrap gap-2">
+                      {selectedLocations.map(id => {
+                        const loc = locations?.find(l => l.id === id);
+                        return (
+                          <span
+                            key={id}
+                            className="px-3 py-1 rounded-full bg-muted text-sm"
+                          >
+                            {loc?.city}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <Dialog open={isEditLocation} onOpenChange={setIsEditLocation}>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Select Locations</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {locations?.map(loc => (
+                            <label
+                              key={loc.id}
+                              className="flex items-center gap-2"
+                            >
+                              <input
+                                type="checkbox"
+                                value={loc.id}
+                                checked={selectedLocations.includes(loc.id)}
+                                onChange={(e) => {
+                                  setSelectedLocations(prev =>
+                                    e.target.checked
+                                      ? [...prev, loc.id]
+                                      : prev.filter(id => id !== loc.id)
+                                  );
+                                }}
+                              />
+                              {loc.city} - {loc.country}
+                            </label>
+                          ))}
+                        </div>
+
+                        <div className="flex justify-end gap-2 pt-4">
+                          <Button
+                            variant="outline"
+                            onClick={() => setIsEditLocation(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsEditLocation(false);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsEditLocation(true)}
                     >
-                      <option value="">Select Location</option>
-                      {locations?.map((loc) => (
-                        <option key={loc.id} value={loc.id}>
-                          {loc.city}
-                        </option>
-                      ))}
-                    </select>
+                      Change
+                    </Button>
                   </div>
                 )}
 
 
                 {/* Tourist section */}
-                {userInfo.touristPreference && (
+                {userInfo.role === "TOURIST" && (
                   <>
                     <div className="space-y-2">
                       <Label>Interests</Label>
                       <Input
                         name="interests"
-                        defaultValue={userInfo.touristPreference.interests?.join(", ")}
+                        defaultValue={userInfo.touristPreference?.interests?.join(", ") || ""}
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label>Travel Style</Label>
-                      <select name="travelStyle">
-                        <option value="CASUAL">Casual</option>
-                        <option value="ADVENTURE">Adventure</option>
+                      <select name="travelStyle" defaultValue={userInfo.touristPreference?.travelStyle || "CASUAL"}>
+                        <option value="BUDGET">Budget</option>
+                        <option value="STANDARD">Standard</option>
                         <option value="LUXURY">Luxury</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Preferred Languages</Label>
+                      <Input
+                        name="preferredLangs"
+                        defaultValue={userInfo.touristPreference?.preferredLangs?.join(", ") || ""}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Group Size</Label>
+                      <Input
+                        name="groupSize"
+                        type="number"
+                        defaultValue={userInfo.touristPreference?.groupSize || ""}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Travel Pace</Label>
+                      <select name="travelPace" defaultValue={userInfo.touristPreference?.travelPace || "MODERATE"}>
+                        <option value="RELAXED">Relaxed</option>
+                        <option value="MODERATE">Moderate</option>
+                        <option value="FAST">Fast</option>
                       </select>
                     </div>
                   </>
@@ -278,7 +367,7 @@ const MyProfile = ({ userInfo, locations}: MyProfileProps) => {
                         name="verificationStatus"
                         value={userInfo?.profile?.verificationStatus}
                         disabled
-                    className="bg-muted"
+                        className="bg-muted"
 
                       />
                     </div>

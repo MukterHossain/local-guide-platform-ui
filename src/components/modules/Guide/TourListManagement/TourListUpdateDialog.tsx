@@ -35,7 +35,10 @@ const TourListUpdateDialog = ({
     const hasShownToast = useRef(false);
     const [locations, setLocations] = useState<any[]>([]);
     const [existingImages, setExistingImages] = useState<string[]>(() => tourLists?.images ?? []);
-    const [category, setCategory] = useState<any[]>([]);
+    // const [category, setCategory] = useState<any[]>([]);
+   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     useEffect(() => {
         if (!state) return;
@@ -62,15 +65,29 @@ const TourListUpdateDialog = ({
         fetchLocations();
     }, []);
 
+ 
+
+
     useEffect(() => {
         async function fetchCategories() {
             const res = await getCategoryForTourList();
             if (res?.success) {
-                setCategory(res.data);
+                setCategories(res.data);
             }
         }
         fetchCategories();
     }, []);
+    const handleDialogOpenChange = (isOpen: boolean) => {
+         if (isOpen && tourLists?.categories) {
+        setSelectedCategories(
+            tourLists.categories.map(cat => cat.id)
+        );
+    }
+        if (!isOpen) {
+        hasShownToast.current = false;
+        onClose();
+    }
+    }
 
     const handleClose = () => {
         // formRef.current?.reset();
@@ -89,7 +106,7 @@ const TourListUpdateDialog = ({
     // console.log("Tour List Update", state, isPending);
     // console.log("Tour List Update existingImages", existingImages);
     return (
-        <Dialog open={open} onOpenChange={(isOpen) => {if(!isOpen) handleClose()}}>
+        <Dialog open={open} onOpenChange={handleDialogOpenChange}>
             <DialogContent className="max-h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Update Tour</DialogTitle>
@@ -121,8 +138,88 @@ const TourListUpdateDialog = ({
                             <FieldLabel>City</FieldLabel>
                             <Input name="city" defaultValue={tourLists.city} />
                         </Field> */}
+
+                        {/* Categories as Dialog */}
                         <Field>
-                            {/* Categories */}
+                            <div className="flex items-center justify-between mb-2">
+                                <FieldLabel>Categories</FieldLabel>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setCategoryDialogOpen(true)}
+                                >
+                                    Select Categories
+                                </Button>
+                            </div>
+
+
+                            <div className="flex gap-2 flex-wrap mb-2">
+                                {selectedCategories.length === 0 && (<p className="text-sm text-gray-500">No categories selected</p>
+                                )}
+                                {selectedCategories.map(id => { // Use selectedCategories instead of category
+                                    const category = categories.find(cat => cat.id === id); // Use categories instead of category
+                                    return (
+                                        <span
+                                            key={id}
+                                            className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded"                                        >
+                                            {category?.name}
+                                        </span>     
+                                    ) 
+                                })}
+                            </div>
+
+
+                            {/* Hidden input to submit form */}
+                            {selectedCategories.map(id => (
+                                <input key={id} type="hidden" name="categories" value={id} />
+                            ))}
+                            <InputFieldError field="categories" state={state} />
+
+                            {/* Category selection Dialog */}
+                            <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
+                                <DialogContent className="max-h-64 overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Select Categories</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        {categories.map(cat => (
+                                            <label
+                                                key={cat.id}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    value={cat.id}
+                                                    checked={selectedCategories.includes(cat.id)}
+                                                    onChange={(e) => {
+                                                        setSelectedCategories(prev =>
+                                                            e.target.checked
+                                                                ? [...prev, cat.id]
+                                                                : prev.filter(id => id !== cat.id)
+                                                        );
+                                                    }}
+                                                />
+                                                {cat.name}
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <div className="flex justify-end gap-2 pt-4">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setCategoryDialogOpen(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button onClick={() => setCategoryDialogOpen(false)}>
+                                            Save
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </Field>
+                        {/* Categories */}
+                        {/* <Field>
+                            
                             <FieldLabel>Categories</FieldLabel>
                             <select
                                 name="categories"
@@ -136,7 +233,7 @@ const TourListUpdateDialog = ({
                                     </option>
                                 ))}
                             </select>
-                        </Field>
+                        </Field> */}
                         {/* city */}
                         <Field>
                             <FieldLabel htmlFor="city">City</FieldLabel>

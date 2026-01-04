@@ -3,7 +3,7 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { adminUpdateGuideStatus, adminUpdateTouristStatus, updateUserSchema} from "@/zod/user.validation";
+import { adminUpdateGuideStatus, adminUpdateTouristStatus, updateUserValidation} from "@/zod/user.validation";
 
 
 

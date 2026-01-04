@@ -42,6 +42,7 @@ export interface UserInfo {
   status: "ACTIVE" | "BLOCKED" | "DELETED";
   needPasswordChange: boolean;
 
+   guideLocations?: GuideLocation[];
   profile?: UserProfile | null;
   touristPreference?: TouristPreference | null;
 
@@ -49,17 +50,31 @@ export interface UserInfo {
   updatedAt: string;
 }
 
+
+export interface GuideLocation {
+  id: string;
+  guideId: string;
+  locationId: string;
+  location?: {
+    id: string;
+    city: string;
+    country: string;
+  };
+}
+
 // Guide-specific info (can be used for listings)
 export interface IUserGuide {
   id: string;
   name: string;
   email: string;
+  phone?: string | null;
   role: UserRole;
 
   status: "ACTIVE" | "BLOCKED" | "DELETED";
   needPasswordChange: boolean;
 
   profile?: UserProfile | null;
+  
 
   createdAt: string;
   updatedAt: string;

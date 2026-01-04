@@ -11,12 +11,14 @@ import { redirect } from "next/navigation";
 
 export const createBecomeGuide = async (_currentState: any, formData: any): Promise<any> => {
   try {
+     const locationIds = formData.get("locationIds")?.toString().split(",").filter(Boolean) || [];
+
     const payload: any = {
       
       expertise: formData.get('expertise')?.toString(),
         experienceYears: Number(formData.get('experienceYears')),
         dailyRate: Number(formData.get('dailyRate')),
-        locationId: formData.get('locationId')?.toString(),
+        locationIds: locationIds,
     };
 
     const validation = zodValidator(payload, becomeGuideValidation);

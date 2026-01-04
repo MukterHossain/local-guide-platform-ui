@@ -61,6 +61,8 @@ console.log("GET USER RES:", res);
         });
     };
 
+    console.log("tour Details data", data)
+
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
