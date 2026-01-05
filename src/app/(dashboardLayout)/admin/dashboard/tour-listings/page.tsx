@@ -1,5 +1,5 @@
-import TouristManagementHeader from '@/components/modules/Admin/TouristManagement/TouristManagementHeader';
-import TouristTable from '@/components/modules/Admin/TouristManagement/TouristTable';
+import AdminTouristListManagementHeader from '@/components/modules/Admin/TourListingsManagement/AdminTourListManagementHeader';
+import AdminTouristListTable from '@/components/modules/Admin/TourListingsManagement/AdminTourListTable';
 import TablePagination from '@/components/shared/TablePagination';
 import { TableSkeleton } from '@/components/shared/TableSkeleton';
 import { queryStringFormatter } from '@/lib/formatters';
@@ -18,11 +18,13 @@ const TourListingsPage =async ({
     const totalPages = Math.ceil(
         (tourListResult?.meta?.total || 1) / (tourListResult?.meta?.limit || 1)
     );
+
+    console.log("tourListResult", tourListResult)
     return (
         <div>
-            <TouristManagementHeader></TouristManagementHeader>
+            <AdminTouristListManagementHeader></AdminTouristListManagementHeader>
             <Suspense fallback={<TableSkeleton columns={4} rows={10} />}>
-                <TouristTable tourists={tourListResult?.data || []} />
+                <AdminTouristListTable  tourLists={tourListResult?.data || []} />
                 <TablePagination
                     currentPage={tourListResult?.meta?.page || 1}
                     totalPages={totalPages || 1}

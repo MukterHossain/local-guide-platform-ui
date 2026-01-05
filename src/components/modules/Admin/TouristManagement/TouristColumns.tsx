@@ -1,3 +1,5 @@
+import GenderBadgeCell from '@/components/shared/cell/GenderBadgeCell';
+import { StatusBadgeCell } from '@/components/shared/cell/StatusBadgeCell';
 import { Column } from '@/components/shared/ManagementTable';
 import { UserInfo } from '@/types/user.interface';
 
@@ -19,15 +21,15 @@ const TouristColumns:Column<UserInfo>[] = [
   },
   {
     header: "Status",
-    accessor: (user) => user.status,
+    accessor: (user) => <StatusBadgeCell isDeleted={user.status === "DELETED"} isBlocked={user.status === "BLOCKED"}/>,
   },
   {
     header: "Role",
-    accessor: (user) => user.role,
+    accessor: (user) => user.role.toLocaleLowerCase(),
   },
   {
     header: "Gender",
-    accessor: (user) => user.profile?.gender || "N/A",
+    accessor: (user) => <GenderBadgeCell maile={user?.profile?.gender === "MALE"} female={user?.profile?.gender === "FEMALE"} />,
   },
   {
     header: "Created At",

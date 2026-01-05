@@ -170,12 +170,14 @@ export async function updateTourList(_prevState: any, formData: FormData) {
     };
 
 
+    
+
     const parsedCategories = parseJSON("categories");
     const existing = parseJSON("existingImages")
     const payload: TourUpdatePayload = {
         title: formData.get("title")?.toString(),
         description: formData.get("description")?.toString(),
-        city: formData.get("city")?.toString(),
+        
         meetingPoint: formData.get("meetingPoint")?.toString(),
         durationHours: formData.get("durationHours") ? Number(formData.get("durationHours")) : undefined,
         tourFee: formData.get("tourFee") ? Number(formData.get("tourFee")) : undefined,
@@ -187,11 +189,14 @@ export async function updateTourList(_prevState: any, formData: FormData) {
     };
 
     const categoryIds = formData.getAll("categories") as string[];
-
+    const city = formData.get("city")?.toString();
     if (categoryIds.length > 0) {
         payload.categories = categoryIds.map(id => ({
             categoryId: id,
         }));
+    }
+    if (city) {
+        payload.city = city.toString();
     }
 
     if (Array.isArray(existing)) {

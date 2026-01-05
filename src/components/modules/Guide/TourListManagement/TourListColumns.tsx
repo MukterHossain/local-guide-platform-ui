@@ -17,6 +17,11 @@ const TourListColumns: Column<ITourList>[] = [
     sortKey: "city",
   },
   {
+    header: "Status",
+    accessor: (tourList) => tourList.status,
+    sortKey: "status",
+  },
+  {
     header: "Tour Fee",
     accessor: (tourList) => tourList.tourFee,
     sortKey: "tourFee",

@@ -1,6 +1,8 @@
 "use client";
 
+import GenderBadgeCell from "@/components/shared/cell/GenderBadgeCell";
 import { StatusBadgeCell } from "@/components/shared/cell/StatusBadgeCell";
+import VerificationBadgeCell from "@/components/shared/cell/VerificationBadgeCell";
 import { Column } from "@/components/shared/ManagementTable";
 import { IUserGuide } from "@/types/user.interface";
 
@@ -25,21 +27,17 @@ const GuideColumns: Column<IUserGuide>[] = [
     accessor: (user) => <StatusBadgeCell isDeleted={user.status === "DELETED"} isBlocked={user.status === "BLOCKED"}/> ,
   },
   {
-    header: "verificationStatus",
-    accessor: (user) => user?.profile?.verificationStatus,
-  },
-  {
-    header: "Availability",
-    accessor: (user) => user?.profile?.availableStatus ? "Available" : "Not Available",
+    header: "Verification",
+    accessor: (user) => <VerificationBadgeCell pending={user?.profile?.verificationStatus === "PENDING"} verified={user?.profile?.verificationStatus === "VERIFIED"} rejected={user?.profile?.verificationStatus === "REJECTED"} />,
   },
   {
     header: "Role",
-    accessor: (user) => user.role,
+    accessor: (user) => user.role.toLocaleLowerCase(),
     sortKey: "role",
   },
   {
     header: "Gender",
-    accessor: (user) => user?.profile?.gender,
+    accessor: (user) => <GenderBadgeCell maile={user?.profile?.gender === "MALE"} female={user?.profile?.gender === "FEMALE" } /> ,
     sortKey: "role",
   },
   {
@@ -47,8 +45,5 @@ const GuideColumns: Column<IUserGuide>[] = [
     accessor: (user) => (user.createdAt).slice(0, 10),
     sortKey: "createdAt",
   }
- 
-  
 ];
-
 export default GuideColumns;

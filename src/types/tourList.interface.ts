@@ -12,6 +12,7 @@ export interface ITourList {
   images: string[];
   tourFee: number;
   maxPeople: number;
+  status: "DRAFT" | "PUBLISHED" | "BLOCKED";
   meetingPoint: string;
   categories?: {
     id: string;
@@ -22,6 +23,7 @@ export interface ITourList {
   updatedAt: string | Date;
 
   guide?: IUserGuide
+  
 }
 
 export type TourUpdatePayload = Partial<{

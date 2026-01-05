@@ -37,6 +37,7 @@ const TourListFormDialog = ({
 
 
     useEffect(() => {
+        if (!state) return;
         if (state?.success) {
             toast.success(state.message || "Tour list created successfully");
             if (formRef.current) {
@@ -44,9 +45,10 @@ const TourListFormDialog = ({
             }
             onSuccess();
             onClose();
-        } else if (state?.message && !state.success) {
-            toast.error(state.message);
-        }
+        } 
+        // else if (state?.message && !state.success) {
+        //     toast.error(state.message);
+        // }
     }, [state, onSuccess, onClose]);
 
     useEffect(() => {
@@ -75,7 +77,7 @@ const TourListFormDialog = ({
     };
     console.log("Create tour", state)
     return (
-        <Dialog open={open} onOpenChange={handleClose}>
+        <Dialog open={open} onOpenChange={(isOpen) => { if(!isOpen && !isPending){handleClose()}}}>
             <DialogContent className="max-h-[90vh] flex flex-col p-0">
                 <DialogHeader className="px-6 pt-6 pb-4">
                     <DialogTitle>Create Tour List</DialogTitle>
@@ -180,7 +182,7 @@ const TourListFormDialog = ({
                             <FieldLabel htmlFor="city">City</FieldLabel>
                             <select
                                 name="city"
-                                required
+                                // required
                                 className="border text-black rounded p-2 w-full"
                             >
                                 <option value="">Select city</option>

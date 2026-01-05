@@ -48,7 +48,7 @@ if (role === "GUIDE") {
 
 if (role === "ADMIN") {
   navItems = [
-    { href: "/admin/dashboard", label: "Admin Dashboard" },
+    { href: "/admin/dashboard", label: "Dashboard" },
     { href: "/admin/dashboard/guides-management", label: "Manage Users" },
     { href: "/admin/dashboard/listings", label: "Manage Listings" },
     { href: "/my-profile", label: "Profile" },

@@ -81,7 +81,7 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
         open={!!deletingTourList}
         onOpenChange={(open) => !open && setDeletingTourList(null)}
         onConfirm={confirmDelete}
-        title="Delete   Tour List"
+        title="Delete Tour List"
         description={`Are you sure you want to delete this Tour List? This action cannot be undone.`}
         isDeleting={isDeleting}
       />

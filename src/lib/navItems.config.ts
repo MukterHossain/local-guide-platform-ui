@@ -139,7 +139,7 @@ export const adminNavItems: NavSection[] = [
             },
             {
                 title: "Tour Listings",
-                href: "/admin/dashboard/listings",
+                href: "/admin/dashboard/tour-listings",
                 icon: "Calendar",
                 roles: ["ADMIN"],
             },
