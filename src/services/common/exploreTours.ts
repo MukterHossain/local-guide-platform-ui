@@ -22,10 +22,25 @@ export async function getTourLists(queryString?: string) {
     }
 }
 
+export async function getTourListsForPublic(queryString?: string) {
+    try {
+        const response = await serverFetch.get(`/listings/public${queryString ? `?${queryString}` : ""}`);
+        const result = await response.json();
+        console.log("getTourListsForPublic", result)
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
 export async function getTourListById(id: string) {
     try {
         const response = await serverFetch.get(`/listings/public/${id}`)
         const result = await response.json();
+
         return result;
     } catch (error: any) {
         console.log(error);

@@ -67,12 +67,9 @@ const AdminTourListStatusUpdateFormDialog = ({ open, onClose, onSuccess, tourLis
                     action={formAction}
                     className="flex flex-col flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4"
                 >
-
-
-                    {/* Account Status */}
                     
                     <Field>
-                        <FieldLabel>Account Status</FieldLabel>
+                        <FieldLabel>Select Status</FieldLabel>
                         <Select name="status" onValueChange={setStatus} defaultValue={tourLists?.status || ''}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select account status" />
@@ -83,11 +80,6 @@ const AdminTourListStatusUpdateFormDialog = ({ open, onClose, onSuccess, tourLis
                                 <SelectItem value="PUBLISHED">Published</SelectItem>
                             </SelectContent>
                         </Select>
-                        {/* <Select
-                        name="status"
-                        value={status}
-                        onValueChange={setStatus}
-                    ></Select> */}
                     </Field>
 
                     {/* Action Buttons */}

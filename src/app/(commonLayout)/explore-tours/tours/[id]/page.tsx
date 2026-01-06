@@ -8,7 +8,7 @@ const ExploreTourDetails = async ({
 }) => {
   const { id } = await params;
   const tourData = await getTourListById(id) ;
-  if(!tourData?.data){
+  if(!tourData){
     return <div>Tour not found</div>
   }
   console.log("Explor Details", tourData)

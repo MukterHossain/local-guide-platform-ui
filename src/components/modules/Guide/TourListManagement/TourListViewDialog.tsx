@@ -38,7 +38,7 @@ const TourListViewDialog = ({
       setLoading(true);
 
       const res = await getTourListById(id);
-console.log("GET USER RES:", res);
+// console.log("GET USER RES:", res);
 
       if (res.success) {
         setData(res.data);
@@ -61,7 +61,7 @@ console.log("GET USER RES:", res);
         });
     };
 
-    console.log("tour Details data", data)
+    // console.log("tour Details data", data)
 
     return (
         <>

@@ -122,7 +122,7 @@ const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
                                     </p>
                                     <div className="flex items-center gap-2 text-sm text-gray-600">
                                         <Globe className="w-4 h-4" />
-                                        {tourData.guide.languages?.join(", ")}
+                                        {tourData?.guide?.profile?.languages?.join(", ")} 
                                     </div>
                                 </div>
                             </div>

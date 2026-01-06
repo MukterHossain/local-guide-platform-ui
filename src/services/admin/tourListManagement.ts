@@ -22,6 +22,7 @@ export async function getTourById(id: string){
     try {
         const response = await serverFetch.get(`/listings/${id}`);
         const result = await response.json();
+        // console.log("tour list details server", result)
         return result;
     } catch (error: any) {
         console.log(error);

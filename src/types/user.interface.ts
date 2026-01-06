@@ -16,7 +16,7 @@ export interface TouristPreference {
 export interface UserProfile {
   image?: string | null;
   bio?: string | null;
-  languages?: string[];
+  languages?: string[] ;
   gender?: "MALE" | "FEMALE" | null;
   address?: string | null;
 
