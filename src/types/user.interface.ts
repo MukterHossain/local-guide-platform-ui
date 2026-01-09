@@ -28,6 +28,7 @@ export interface UserProfile {
   availableStatus?: boolean | null;
   verificationStatus?: "PENDING" | "VERIFIED" | "REJECTED";
   adminNote?: string | null;
+  location?: string | null;
   locationId?: string | null;
 }
 
@@ -39,12 +40,13 @@ export interface UserInfo {
   phone?: string | null;
 
   role: UserRole;
-  status: "ACTIVE" | "BLOCKED" | "DELETED";
+  status: "ACTIVE" | "BLOCKED" | "DELETED" | "PENDING";
   needPasswordChange: boolean;
 
    guideLocations?: GuideLocation[];
   profile?: UserProfile | null;
   touristPreference?: TouristPreference | null;
+  
 
   createdAt: string;
   updatedAt: string;
@@ -79,6 +81,21 @@ export interface IUserGuide {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IMeta {
+  page: number;
+  limit: number;
+  total: number;
+}
+
+export interface IApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+  meta?: IMeta;
+}
+
+
 
 // Type for updating user payload based on zod schema
 export type UpdateUserPayload = z.infer<typeof updateUserValidation>;

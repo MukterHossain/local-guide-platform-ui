@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 
 
 import ManagementPageHeader from "@/components/shared/ManagementPageHeader";
-import AvailabilityFormDialog from "./AvailabilityFormDialog";
+import AvailabilityFormDialog from "../TourListManagement/AvailabilityFormDialog";
 
 const AvailabilityManagementHeader = () => {
     const router = useRouter();
@@ -31,12 +31,12 @@ const AvailabilityManagementHeader = () => {
       };
     return (
        <>
-      <AvailabilityFormDialog
+      {/* <AvailabilityFormDialog
         key={dialogKey}
         open={isDialogOpen}
         onClose={handleCloseDialog}
         onSuccess={handleSuccess}
-      />
+      /> */}
 
       <ManagementPageHeader
         title="Availability Management"

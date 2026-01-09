@@ -11,7 +11,7 @@ interface BookingsTableProps {
   bookings: IBooking[];
 }
 
-import { deleteBooking } from "@/services/tourist/myBookings";
+import { deleteBooking } from "@/services/tourist/tourBookings";
 import { IBooking } from "@/types/booking.interface";
 import { MyBookingsColumns } from "./MyBookingsColumns";
 

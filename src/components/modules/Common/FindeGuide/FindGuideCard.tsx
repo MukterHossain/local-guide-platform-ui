@@ -20,7 +20,7 @@ const FindGuideCard = ({guide}: FindGuideCardProps) => {
         <CardHeader className="pb-3">
           <div className="flex items-start gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={guide.image || ""} alt={guide.name} />
+              <AvatarImage src={guide.profile?.image || ""} alt={guide.name} />
               <AvatarFallback className="text-lg">
                 {getInitials(guide.name)}
               </AvatarFallback>
@@ -28,10 +28,10 @@ const FindGuideCard = ({guide}: FindGuideCardProps) => {
 
             <div className="flex-1 min-w-0">
               <CardTitle className="text-lg line-clamp-1">
-                Dr. {guide.name}
+                {guide.name}
               </CardTitle>
               <CardDescription className="line-clamp-1">
-                {guide.languages?.join(", ")}
+                {guide.profile?.languages?.join(", ")}
               </CardDescription>
 
               <div className="flex items-center gap-2 mt-2">
@@ -61,7 +61,7 @@ const FindGuideCard = ({guide}: FindGuideCardProps) => {
             <div className="flex items-center gap-2 text-muted-foreground">
               <DollarSign className="h-4 w-4 shrink-0" />
               <span className="font-semibold text-foreground">
-                ${guide.profile?.feePerHour?.toFixed(2) || "N/A"}
+                {guide.profile?.dailyRate?.toFixed(2) || "N/A"}
               </span>
             </div>
           </div>
@@ -81,12 +81,6 @@ const FindGuideCard = ({guide}: FindGuideCardProps) => {
           </Button>
         </CardFooter>
       </Card>
-
-      {/* <BookAppointmentDialog
-        doctor={doctor}
-        isOpen={showScheduleModal}
-        onClose={() => setShowScheduleModal(false)}
-      /> */}
     </>
     );
 };

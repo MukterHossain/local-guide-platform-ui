@@ -16,11 +16,13 @@ interface IAvailabilityFormDialogProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  tourId: string;
 }
 const AvailabilityFormDialog = ({
   open,
   onClose,
   onSuccess,
+  tourId
 }: IAvailabilityFormDialogProps) => {
     const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(createAvailability, null);
@@ -42,11 +44,13 @@ const AvailabilityFormDialog = ({
     formRef.current?.reset();
     onClose();
   };
+
+  console.log("Availability", state)
     return (
         <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle>Create Location</DialogTitle>
+          <DialogTitle>Create Availability</DialogTitle>
         </DialogHeader>
 
         <form
@@ -54,6 +58,7 @@ const AvailabilityFormDialog = ({
           action={formAction}
           className="flex flex-col flex-1 min-h-0"
         >
+          <input type="hidden" name="tourId" value={tourId} />
           <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
             {/* City */}
             <Field>

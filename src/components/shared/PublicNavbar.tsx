@@ -20,6 +20,7 @@ const role = userInfo?.role || {};
 const baseItems = [
   { href: "/explore-tours", label: "Explore Tours" },
   { href: "/become-guide", label: "Become a Guide" },
+  { href: "/find-guide", label: "Find a Guide" },
 ];
 
 let navItems: { href: string; label: string }[] = [];

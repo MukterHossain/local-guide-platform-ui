@@ -4,32 +4,21 @@
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { ITourList } from "@/types/tourList.interface";
-import { Clock, DollarSign, MapPin, Users, Calendar, Globe } from "lucide-react";
+import { Clock, DollarSign, MapPin, Users, Calendar, Globe, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import BookTourDialog from "./BookAvailableTourDialog";
 
 interface ITourListCardProps {
     tour: ITourList;
     onViewDetails?: (tour: ITourList) => void;
 }
 const ExploreToursCard = ({ tour }: ITourListCardProps) => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    const handlePrevImage = () => {
-        setCurrentImageIndex((prev) =>
-            prev === 0 ? tour.images.length - 1 : prev - 1
-        );
-    };
-
-    const handleNextImage = () => {
-        setCurrentImageIndex((prev) =>
-            prev === tour.images.length - 1 ? 0 : prev + 1
-        );
-    };
+    const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
     const images = Array.isArray(tour.images)
-  ? tour.images.filter(img => typeof img === "string" && img.trim() !== "")
-  : [];
+        ? tour.images.filter(img => typeof img === "string" && img.trim() !== "")
+        : [];
 
     const formatDate = (date: string | Date) => {
         return new Date(date).toLocaleDateString('en-US', {
@@ -38,6 +27,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
             year: 'numeric',
         });
     };
+
 
     console.log("tour", tour);
     return (
@@ -52,7 +42,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                             alt={tour.title}
                             width={500}
                             height={500}
-                            className="w-full h-56 object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                     ) : (
                         // ✅ Multiple Images (Carousel)
@@ -65,7 +55,7 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                                             alt={`${tour.title} - Image ${index + 1}`}
                                             width={500}
                                             height={500}
-                                            className="w-full h-56 object-cover"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
                                     </CarouselItem>
                                 ))}
@@ -90,105 +80,58 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
             {/* Card Content */}
             <div className="p-5 space-y-4">
                 {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 line-clamp-2 ">
-                    {tour.title.slice(0, 25)}
+                <h3 className="text-lg font-bold text-gray-900 line-clamp-2">
+                    {tour.title.slice(0, 30)}
                 </h3>
 
-                {/* Description */}
-                <p className="text-sm text-gray-600 line-clamp-3 ">
-                    {tour.description.slice(0, 100)}
-                </p>
+                {/* Rating */}
+                <div className="flex items-center gap-1 text-sm">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span className="font-semibold text-gray-800">
+                        {tour?.guide?.profile?.avgRating ? tour?.guide?.profile?.avgRating.toFixed(1) : "New"}
+                    </span>
+                    <span className="text-gray-500">
+                        reviewsCount
+                        {/* ({tour.guide?.profile?.reviewCount ?? 0}) */}
+                    </span>
+                </div>
 
-                {/* Tour Details Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                    {/* Location */}
-                    <div className="flex items-center gap-2 text-gray-700">
-                        <MapPin className="w-4 h-4 text-red-500 flex-shrink-0" />
-                        <span className="text-sm font-medium truncate">{tour.city}</span>
+                {/* Meta Info */}
+                <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
+                    <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-red-500" />
+                        <span className="truncate">{tour.city}</span>
                     </div>
 
-                    {/* Duration */}
-                    <div className="flex items-center gap-2 text-gray-700">
-                        <Clock className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span className="text-sm font-medium">
-                            {tour.durationHours}h
-                        </span>
+                    <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-green-600" />
+                        <span>{tour.durationHours}h</span>
                     </div>
 
-                    {/* Max People */}
-                    <div className="flex items-center gap-2 text-gray-700">
-                        <Users className="w-4 h-4 text-purple-500 flex-shrink-0" />
-                        <span className="text-sm font-medium">
-                            {tour.maxPeople} {tour.maxPeople === 1 ? 'person' : 'people'}
-                        </span>
-                    </div>
-
-                    {/* Date */}
-                    <div className="flex items-center gap-2 text-gray-700">
-                        <Calendar className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                        <span className="text-sm font-medium truncate">
-                            {formatDate(tour.createdAt)}
+                    <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-purple-600" />
+                        <span>
+                            {tour.maxPeople}{" "}
+                            {tour.maxPeople === 1 ? "person" : "people"}
                         </span>
                     </div>
                 </div>
-
-                {/* Meeting Point */}
-                {tour.meetingPoint && (
-                    <div className="pt-3 border-t border-gray-200">
-                        <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-xs text-gray-500 font-medium">Meeting Point</p>
-                                <p className="text-sm text-gray-700 truncate">
-                                    {tour.meetingPoint}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Guide Info */}
-                {/* {tour.guide && (
-                    <div className="pt-3 border-t border-gray-200">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                                {tour.guide.name?.charAt(0).toUpperCase()}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-gray-900 truncate">
-                                    {tour.guide.name}
-                                </p>
-                                <p className="text-xs text-gray-500 truncate">Tour Guide</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                                <span className="text-sm font-medium text-gray-700">
-                                    {tour.guide.languages?.join(', ')}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                )} */}
 
                 {/* View Details Button */}
                 <div className="flex items-center justify-between gap-3">
-                    {/* View Details */}
                     <Link
                         href={`/explore-tours/tours/${tour.id}`}
-                        className="text-sm md:text-lg text-center border border-blue-600 text-blue-600 font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-sm"
+                        className="block w-full text-center rounded-lg border border-blue-600 text-blue-600 font-semibold py-2 transition hover:bg-blue-50"
                     >
                         View Details
                     </Link>
-
-                    {/* Book Now */}
-                    <Link
-                        href={`/tour/${tour.id}`}
-                        className="text-sm md:text-lg  text-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                    >
-                        Book Now
-                    </Link>
+                    <Button onClick={() => setShowAvailabilityModal(true)} className="flex-1">
+                        Book Tour
+                    </Button>
                 </div>
-
+                <BookTourDialog 
+                tour={tour}
+                isOpen={showAvailabilityModal} onClose={() => setShowAvailabilityModal(false)} />
             </div>
         </div>
     );

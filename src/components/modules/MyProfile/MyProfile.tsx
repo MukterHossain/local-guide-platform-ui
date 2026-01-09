@@ -28,7 +28,7 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditLocation, setIsEditLocation] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>(
-    userInfo.guideLocations?.map(l => l.locationId) || []
+    userInfo?.guideLocations?.map(l => l.locationId) || []
   );
 
 
@@ -98,11 +98,11 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                   {previewImage || userInfo?.profile?.image ? (
                     <AvatarImage
                       src={previewImage || (userInfo?.profile?.image as string)}
-                      alt={userInfo.name}
+                      alt={userInfo?.name}
                     />
                   ) : (
                     <AvatarFallback className="text-3xl">
-                      {userInfo?.name ? getInitials(userInfo.name) : ""}
+                      {userInfo?.name ? getInitials(userInfo?.name) : ""}
                     </AvatarFallback>
                   )}
                 </Avatar>
@@ -125,9 +125,9 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
 
 
               <div className="text-center">
-                <p className="font-semibold text-lg">{userInfo.name}</p>
+                <p className="font-semibold text-lg">{userInfo?.name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {userInfo.email}
+                  {userInfo?.email}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1 capitalize">
                   {/* {userInfo.role.replace("_", " ")} */}
@@ -161,7 +161,7 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                   <Input
                     id="name"
                     name="name"
-                    defaultValue={userInfo?.name || userInfo.name}
+                    defaultValue={userInfo?.name || userInfo?.name}
                     disabled={isPending}
                   />
                 </div>
@@ -172,7 +172,7 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                   <Input
                     id="email"
                     type="email"
-                    value={userInfo.email}
+                    value={userInfo?.email}
                     disabled
                     className="bg-muted"
                   />
@@ -220,7 +220,7 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                   </select>
                 </div>
 
-                {userInfo.role === "GUIDE" && (
+                {userInfo?.role === "GUIDE" && (
 
                   <div className="space-y-2">
                     <input
@@ -303,19 +303,19 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
 
 
                 {/* Tourist section */}
-                {userInfo.role === "TOURIST" && (
+                {userInfo?.role === "TOURIST" && (
                   <>
                     <div className="space-y-2">
                       <Label>Interests</Label>
                       <Input
                         name="interests"
-                        defaultValue={userInfo.touristPreference?.interests?.join(", ") || ""}
+                        defaultValue={userInfo?.touristPreference?.interests?.join(", ") || ""}
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label>Travel Style</Label>
-                      <select name="travelStyle" defaultValue={userInfo.touristPreference?.travelStyle || "CASUAL"}>
+                      <select name="travelStyle" defaultValue={userInfo?.touristPreference?.travelStyle || "CASUAL"} className="w-full border py-1 px-1 rounded-md">
                         <option value="BUDGET">Budget</option>
                         <option value="STANDARD">Standard</option>
                         <option value="LUXURY">Luxury</option>
@@ -325,7 +325,7 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                       <Label>Preferred Languages</Label>
                       <Input
                         name="preferredLangs"
-                        defaultValue={userInfo.touristPreference?.preferredLangs?.join(", ") || ""}
+                        defaultValue={userInfo?.touristPreference?.preferredLangs?.join(", ") || ""}
                       />
                     </div>
                     <div className="space-y-2">
@@ -333,12 +333,12 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
                       <Input
                         name="groupSize"
                         type="number"
-                        defaultValue={userInfo.touristPreference?.groupSize || ""}
+                        defaultValue={userInfo?.touristPreference?.groupSize || ""}
                       />
                     </div>
                     <div className="space-y-2">
                       <Label>Travel Pace</Label>
-                      <select name="travelPace" defaultValue={userInfo.touristPreference?.travelPace || "MODERATE"}>
+                      <select  name="travelPace" defaultValue={userInfo?.touristPreference?.travelPace || "MODERATE"} className="w-full border py-1 px-1 rounded-md">
                         <option value="RELAXED">Relaxed</option>
                         <option value="MODERATE">Moderate</option>
                         <option value="FAST">Fast</option>
@@ -349,14 +349,14 @@ const MyProfile = ({ userInfo, locations }: MyProfileProps) => {
 
 
                 {/* Guide-Specific Fields */}
-                {userInfo.role === "GUIDE" && (
+                {userInfo?.role === "GUIDE" && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="expertise">Expertise</Label>
                       <Input
                         id="expertise"
                         name="expertise"
-                        defaultValue={userInfo.profile?.expertise || ""}
+                        defaultValue={userInfo?.profile?.expertise || ""}
                       // disabled={isPending}
                       />
                     </div>

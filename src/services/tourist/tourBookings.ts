@@ -2,53 +2,26 @@
 "use server"
 
 import { serverFetch } from "@/lib/server-fetch";
-import { zodValidator } from "@/lib/zodValidator";
-import { createAvailabilitySchema } from "@/zod/availability.validation";
+import { IBookingFormData } from "@/types/booking.interface";
 
-
-export async function createBooking(_prevState: any, formData: FormData) {
+export async function createBooking(data: IBookingFormData) {
     // Build validation payload
-    const validationPayload = {
-        startAt: formData.get("startAt") as string,
-        endAt: formData.get("endAt") as string
-    };
-
-
-
-    const validation = zodValidator(validationPayload, createAvailabilitySchema);
-
-    if (!validation.success && validation.errors) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-            errors: validation.errors,
-        }
-    }
-
-
-    if (!validation.data) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-        }
-    }
+    
 
     try {
         const response = await serverFetch.post("/bookings", {
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(validation.data),
+            body: JSON.stringify(data),
         });
 
         const result = await response.json();
         return result;
     } catch (error: any) {
-        console.error("Create availability error:", error);
+        console.error("Create booking error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create availability',
-            formData: validationPayload
+            message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create booking',
+            formData: data
         };
     }
 }
@@ -72,9 +45,9 @@ export async function getMyBookings(queryString?: string) {
 
 
 
-export async function getUserById(id: string) {
+export async function getBookingById(id: string) {
     try {
-        const response = await serverFetch.get(`/user/${id}`)
+        const response = await serverFetch.get(`/bookings/${id}`)
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -82,6 +55,35 @@ export async function getUserById(id: string) {
         return {
             success: false,
             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
+
+export async function changeBookingStatus(
+    id: string,
+    status: string
+) {
+    try {
+        const response = await serverFetch.patch(
+            `/bookings/status/${id}`,
+            {
+                body: JSON.stringify({ status }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Error changing booking status:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to change booking status",
         };
     }
 }

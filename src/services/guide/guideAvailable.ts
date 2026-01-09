@@ -9,8 +9,9 @@ import { createAvailabilitySchema } from "@/zod/availability.validation";
 export async function createAvailability(_prevState: any, formData: FormData) {
     // Build validation payload
     const validationPayload = {
+        tourId: formData.get("tourId") as string,
         startAt: formData.get("startAt") as string,
-        endAt: formData.get("endAt") as string
+        endAt: formData.get("endAt") as string,
     };
 
 
@@ -68,13 +69,9 @@ export async function getAvailables(queryString?: string) {
         };
     }
 }
-
-
-
-
-export async function getUserById(id: string) {
+export async function getAvailabilityById(id: string) {
     try {
-        const response = await serverFetch.get(`/user/${id}`)
+        const response = await serverFetch.get(`/availability/${id}`)
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -85,6 +82,23 @@ export async function getUserById(id: string) {
         };
     }
 }
+
+
+
+
+// export async function getUserById(id: string) {
+//     try {
+//         const response = await serverFetch.get(`/user/${id}`)
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.log(error);
+//         return {
+//             success: false,
+//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+//         };
+//     }
+// }
 
 
 

@@ -1,62 +1,76 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { IUserGuide } from "@/types/user.interface";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { IAvailability } from "@/types/availability.interface";
+import { IBooking } from "@/types/booking.interface";
+import { ITourList } from "@/types/tourList.interface";
+import { format } from "date-fns";
+import { Calendar, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface BookingGuideDialogProps {
-    duide: IUserGuide;
-    isOpen: boolean;
-    onClose: () => void;
+interface BookTourDialogProps {
+  tour: ITourList & { availability?: IAvailability[] };
+  isOpen: boolean;
+  onClose: () => void;
 }
-const BookingGuideDialog = ({duide, isOpen, onClose} : BookingGuideDialogProps) => {
-      const router = useRouter();
-  const guides = duide || [];
-//   const [selectedSchedule, setSelectedSchedule] =
-//     useState<IDoctorSchedule | null>(null);
+const BookAvailableTourDialog = ({ tour, isOpen, onClose }: BookTourDialogProps) => {
+  const router = useRouter();
+  const tourAvailability = Array.isArray(tour?.availability) ? tour.availability : [];
+  const [selectedAvailability, setSelectedAvailability] = useState<IAvailability | null>(null);
 
   const handleCloseModal = () => {
-    // setSelectedSchedule(null);
+    setSelectedAvailability(null);
     onClose();
   };
 
-   const groupGuidesByDate = () => {
-    const grouped: Record<string, IUserGuide[]> = {};
+  const groupAvailabilitiesByDate = () => {
+    const grouped: Record<string, IAvailability[]> = {};
 
-    // guides.forEach((guide) => {
-    //   if (!guide) return;
+    tourAvailability.forEach((availability) => {
+      if (!availability) return;
 
-    //   const startDate = new Date(guide)
-    //     .toISOString()
-    //     .split("T")[0];
+      const dateObj = new Date(availability.startAt);
 
-    //   if (startDate) {
-    //     if (!grouped[startDate]) {
-    //       grouped[startDate] = [];
-    //     }
-    //     grouped[startDate].push(guide);
-    //   }
-    // });
+      const startDate = dateObj.toLocaleDateString("en-CA");
+
+      if (startDate) {
+        if (!grouped[startDate]) {
+          grouped[startDate] = [];
+        }
+        grouped[startDate].push(availability);
+      }
+    });
 
     return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
   };
 
-   const handleContinue = () => {
-    if (guides) {
+  const handleContinue = () => {
+    if (selectedAvailability) {
       router.push(
-        `/dashboard/booking/${guides.id}/${guides.id}`
+        `/dashboard/booking/${tour.id}/${selectedAvailability.id}`
       );
     }
   };
-    return (
-        <Dialog open={isOpen} onOpenChange={handleCloseModal}>
+
+  console.log("availability", tourAvailability)
+  return (
+    <Dialog open={isOpen} onOpenChange={handleCloseModal}>
       <DialogContent className="max-w-2xl max-h-[80vh]">
         <>
           <DialogHeader>
-            <DialogTitle>Book Appointment with Guide {duide.name}</DialogTitle>
+            <DialogTitle>Book Tour {tour?.title}</DialogTitle>
             <DialogDescription>
-              Select an available time slot for your
+              Select an available time slot for your tour
             </DialogDescription>
           </DialogHeader>
 
@@ -64,27 +78,27 @@ const BookingGuideDialog = ({duide, isOpen, onClose} : BookingGuideDialogProps) 
             {/* Doctor Info */}
             <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
               <div>
-                <p className="font-medium">{duide.email}</p>
+
                 <p className="text-sm text-muted-foreground">
-                  Guide Fee per hour: ${duide.profile?.feePerHour}
+                  Tour Fee: ${tour?.tourFee}
                 </p>
               </div>
             </div>
 
             {/* Schedules */}
-            {/* {hasSchedulesWithoutData ? (
+            {!tour.availability ? (
               <div className="text-center py-12">
                 <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">
-                  Schedule data not available
+                  Availability data not available
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  The doctor has {doctorSchedules.length} schedule
-                  {doctorSchedules.length !== 1 ? "s" : ""}, but detailed
+                  The tour has {tourAvailability.length} availability
+                  {tourAvailability.length !== 1 ? "s" : ""}, but detailed
                   information is not loaded.
                 </p>
               </div>
-            ) : groupedSchedules.length === 0 ? (
+            ) : tour.availability?.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">
@@ -97,7 +111,7 @@ const BookingGuideDialog = ({duide, isOpen, onClose} : BookingGuideDialogProps) 
             ) : (
               <ScrollArea className="h-[300px] pr-4">
                 <div className="space-y-4">
-                  {groupedSchedules.map(([date, dateSchedules]) => (
+                  {groupAvailabilitiesByDate().map(([date, dateAvailabilities]) => (
                     <div key={date}>
                       <div className="flex items-center gap-2 mb-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -107,22 +121,22 @@ const BookingGuideDialog = ({duide, isOpen, onClose} : BookingGuideDialogProps) 
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {dateSchedules.map((schedule) => {
-                          const startTime = schedule.schedule?.startDateTime
-                            ? new Date(schedule.schedule.startDateTime)
+                        {dateAvailabilities.map((availability) => {
+                          const startTime = availability.startAt
+                            ? new Date(availability.startAt)
                             : null;
 
                           return (
                             <Button
-                              key={schedule.scheduleId}
+                              key={availability.id}
                               variant={
-                                selectedSchedule?.scheduleId ===
-                                schedule.scheduleId
+                                selectedAvailability?.id ===
+                                  availability.id
                                   ? "default"
                                   : "outline"
                               }
                               className="justify-start h-auto py-2"
-                              onClick={() => setSelectedSchedule(schedule)}
+                              onClick={() => setSelectedAvailability(availability)}
                             >
                               <Clock className="h-4 w-4 mr-2" />
                               <span className="text-sm">
@@ -138,19 +152,19 @@ const BookingGuideDialog = ({duide, isOpen, onClose} : BookingGuideDialogProps) 
                   ))}
                 </div>
               </ScrollArea>
-            )} */}
+            )}
           </div>
 
           <DialogFooter>
             <Button onClick={handleCloseModal}>Close</Button>
-            <Button onClick={handleContinue} disabled={!guides}>
+            <Button onClick={handleContinue} disabled={!selectedAvailability}>
               Continue
             </Button>
           </DialogFooter>
         </>
       </DialogContent>
     </Dialog>
-    );
+  );
 };
 
-export default BookingGuideDialog;
+export default BookAvailableTourDialog;

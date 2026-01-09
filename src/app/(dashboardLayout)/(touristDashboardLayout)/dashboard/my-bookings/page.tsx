@@ -4,7 +4,7 @@ import MyBookingsTable from "@/components/modules/Tourist/MyBookingsManagement/M
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getMyBookings } from "@/services/tourist/myBookings";
+import { getMyBookings } from "@/services/tourist/tourBookings";
 import { Suspense } from "react";
 
 const MyBookingsPage = async ({

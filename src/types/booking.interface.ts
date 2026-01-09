@@ -1,25 +1,33 @@
+import { IAvailability } from "./availability.interface";
+import { BookingStatus, PaymentStatus } from "./enum";
+import { IPayment } from "./payment.interface";
+import { IReview } from "./review.interface";
 
-export type BookingStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
-export type PaymentStatus = "UNPAID" | "PAID" | "REFUNDED";
+import { ITourList } from "./tourList.interface";
+import { UserInfo } from "./user.interface";
 
 export interface IBooking {
   id: string;
   tourId: string;
   userId: string;
   availabilityId: string;
-
-  bookingDate: string | Date;
+  bookingDate: string;
   status: BookingStatus;
-
   totalFee: number;
   paymentStatus: PaymentStatus;
 
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  createdAt: string;
+  updatedAt: string;
 
-//   // Optional populated relations
-//   tour?: Tour;
-//   availability?: Availability;
-//   user?: User;
-//   payment?: Payment | null;
+  tour?: ITourList;
+  user?: UserInfo;
+  payment?: IPayment | null;
+  review?: IReview | null;
+  availability?: IAvailability | null;
+}
+
+export interface IBookingFormData {
+  tourId: string;
+  availabilityId: string;
+  bookingDate: string;
 }

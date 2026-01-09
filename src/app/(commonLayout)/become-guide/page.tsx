@@ -18,10 +18,16 @@ const BecomeGuidePage = async () => {
     redirect("/register?intent=become-guide");
   }
 
+  // if (userInfo.profile?.verificationStatus === "PENDING") {
+    
+  //   redirect("/dashboard");
+  // }
+
   // ❌ Already a guide
   if (userInfo?.role === "GUIDE") {
     redirect("/guide/dashboard");
   }
+
     return (
         <div className="flex min-h-screen items-center justify-center">
 

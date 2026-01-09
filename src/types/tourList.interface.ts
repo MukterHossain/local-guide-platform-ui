@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IAvailability } from "./availability.interface";
+import { IBooking } from "./booking.interface";
+import {  ITourCategory } from "./category.interface";
+import { TourStatus } from "./enum";
+import { ILocation } from "./location.interface";
+import { IReview} from "./review.interface";
 import { IUserGuide } from "./user.interface";
+
 
 
 export interface ITourList {
@@ -12,18 +19,23 @@ export interface ITourList {
   images: string[];
   tourFee: number;
   maxPeople: number;
-  status: "DRAFT" | "PUBLISHED" | "BLOCKED";
-  meetingPoint: string;
-  categories?: {
-    id: string;
-    name: string;
-  }[];
+  status: TourStatus;
+  meetingPoint?: string;
+  isDeleted: boolean;
 
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  createdAt: string;
+  updatedAt: string;
 
-  guide?: IUserGuide
-  
+  guide?: IUserGuide;
+  bookings?: IBooking[];
+  location?: ILocation;
+  reviews?: IReview[];
+  categories?: ITourCategory[];
+  availability?: IAvailability[];
+
+  avgRating?: number;
+  reviewCount?: number;
+
 }
 
 export type TourUpdatePayload = Partial<{

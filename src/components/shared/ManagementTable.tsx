@@ -7,6 +7,7 @@ import {
   Eye,
   Loader2,
   MoreHorizontal,
+  Plus,
   Trash,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,6 +41,7 @@ interface ManagementTableProps<T> {
   onView?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  onAdd?: (row: T) => void;
   getRowKey: (row: T) => string;
   emptyMessage?: string;
   isRefreshing?: boolean;
@@ -52,6 +54,7 @@ function ManagementTable<T>({
   onView,
   onEdit,
   onDelete,
+  onAdd,
   getRowKey,
   emptyMessage = "No records found.",
   isRefreshing = false,
@@ -173,6 +176,12 @@ function ManagementTable<T>({
                             <DropdownMenuItem onClick={() => onEdit(item)}>
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
+                            </DropdownMenuItem>
+                          )}
+                          {onAdd && (
+                            <DropdownMenuItem onClick={() => onAdd(item)}>
+                              <Plus className="mr-2 h-4 w-4" />
+                              Add availability
                             </DropdownMenuItem>
                           )}
                           {onDelete && (

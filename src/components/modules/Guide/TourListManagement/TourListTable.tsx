@@ -12,6 +12,8 @@ import { deleteTourList } from "@/services/guide/guideTourList";
 import TourListColumns from "./TourListColumns";
 import TourListUpdateDialog from "./TourListUpdateDialog";
 import TourListViewDialog from "./TourListViewDialog";
+import AvailabilityFormDialog from "./AvailabilityFormDialog";
+import { IAvailability } from "@/types/availability.interface";
 
 interface AvailabilityTableProps {
   tourLists: ITourList[];
@@ -27,6 +29,7 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
   const [editingTourList, setEditingTourList] = useState<ITourList | null>(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>();
+  const [availabilityOpen, setAvailabilityOpen] = useState(false);
 
   const handleView = (tourList: ITourList) => {
     setSelectedId(tourList.id);
@@ -37,6 +40,10 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
 
   const handleEdit = (tourList: ITourList) => {
     setEditingTourList(tourList);
+  };
+  const handleAvailability = (tourList: ITourList) => {
+    setSelectedId(tourList.id);
+    setAvailabilityOpen(true);
   };
 
   const handleRefresh = () => {
@@ -72,6 +79,7 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
         onDelete={handleDelete}
         onEdit={handleEdit}
         onView={handleView}
+        onAdd={handleAvailability}
         getRowKey={(tourList) => tourList.id!}
         emptyMessage="No Tour List found"
       />
@@ -91,9 +99,18 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
         onOpenChange={(open) => {
           setViewOpen(open);
           if (!open) setSelectedId(null!);
-        }} 
+        }}
         id={selectedId}
-      /> 
+      />
+      <AvailabilityFormDialog
+        open={availabilityOpen}
+        onClose={() => {
+          setAvailabilityOpen(false);
+          setSelectedId(undefined);
+        }}
+        onSuccess={handleRefresh}
+        tourId={selectedId!}
+      />
       <TourListUpdateDialog
         open={!!editingTourList}
         key={editingTourList?.id}

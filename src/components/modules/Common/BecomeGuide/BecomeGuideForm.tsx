@@ -30,10 +30,13 @@ const BecomeGuideForm = ({
 
 
 
-
     useEffect(() => {
         if (!userInfo) {
             router.replace("/register");
+            return;
+        }
+        if(userInfo.role === "GUIDE") {
+            router.replace("/guide/dashboard");
             return;
         }
 
