@@ -13,8 +13,8 @@ const TourListColumns: Column<ITourList>[] = [
   },
   {
     header: "City",
-    accessor: (tourList) => tourList.city,
-    sortKey: "city",
+    accessor: (tourList) => tourList.city ?? "N/A",
+  sortKey: "city.city",
   },
   {
     header: "Status",

@@ -11,6 +11,7 @@ export interface IAvailability {
   isBooked: boolean;
 
   guide?: IUserGuide;
+  
   bookings?: IBooking[];
 
   createdAt: string;

@@ -61,7 +61,7 @@ const TourListViewDialog = ({
         });
     };
 
-    // console.log("tour Details data", data)
+    console.log("tour Details data", data)
 
     return (
         <>
@@ -182,7 +182,8 @@ const TourListViewDialog = ({
 
                                 {/* Categories */}
                                 {tourData.categories && tourData.categories.length > 0 && (
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-2 ">
+                                        <span className="text-lg font-semibold text-gray-900 ">Categories:</span>
                                         {tourData.categories.map(tc => (
                                             <span
                                                 key={tc.id}
@@ -206,6 +207,29 @@ const TourListViewDialog = ({
                                         </p>
                                     </div>
                                 )}
+                                {/* availability */}
+                                {tourData?.guide?.profile?.availabilities
+ && tourData.guide.profile.availabilities
+.length > 0 && (
+                                    <div className="space-y-2">
+                                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                            <Calendar className="w-5 h-5 text-green-600" />
+                                            Availability
+                                        </h3>
+                                        <div className="flex flex-col gap-1">
+                                            {tourData.guide.profile.availabilities
+.map((a: any) => (
+                                                <p
+                                                    key={a.id}
+                                                    className="text-gray-700 bg-green-50 p-2 rounded-lg border border-green-100"
+                                                >
+                                                    {new Date(a.startAt).toLocaleDateString()} - {new Date(a.endAt).toLocaleDateString()}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
 
                                 {/* Description */}
                                 <div className="space-y-2">

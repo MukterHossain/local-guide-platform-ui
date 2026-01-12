@@ -125,14 +125,12 @@ const ExploreToursCard = ({ tour }: ITourListCardProps) => {
                     >
                         View Details
                     </Link>
-                    <Button onClick={() => setShowAvailabilityModal(true)} className="flex-1">
+                    <Button 
+                    // onClick={() => setShowAvailabilityModal(true)} 
+                    className="flex-1">
                         Book Tour
                     </Button>
-                </div>
-                <BookTourDialog 
-                tour={tour}
-                isOpen={showAvailabilityModal} onClose={() => setShowAvailabilityModal(false)} />
-            </div>
+                </div></div>
         </div>
     );
 };

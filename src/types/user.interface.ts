@@ -1,10 +1,12 @@
 import { UserRole } from "@/lib/auth-utils";
 import { updateUserValidation } from "@/zod/user.validation";
 import z from "zod";
+import { IAvailability } from "./availability.interface";
 
 // TouristPreference type for frontend
 export interface TouristPreference {
   id?: string;
+  userId?: string;
   interests?: string[];
   travelStyle?: "CASUAL" | "ADVENTURE" | "LUXURY";
   preferredLangs?: string[];
@@ -14,6 +16,8 @@ export interface TouristPreference {
 
 // Nested profile structure for users
 export interface UserProfile {
+  id?: string;
+  userId?: string; // not
   image?: string | null;
   bio?: string | null;
   languages?: string[] ;
@@ -22,6 +26,7 @@ export interface UserProfile {
 
   // Guide-only
   expertise?: string | null;
+  availabilities?: IAvailability[];
   experienceYears?: number | null;
   dailyRate?: number | null;
   avgRating?: number | null;
@@ -53,6 +58,8 @@ export interface UserInfo {
 }
 
 
+
+// Not
 export interface GuideLocation {
   id: string;
   guideId: string;
@@ -76,7 +83,8 @@ export interface IUserGuide {
   needPasswordChange: boolean;
 
   profile?: UserProfile | null;
-  
+  availabilities?: IAvailability[]
+
 
   createdAt: string;
   updatedAt: string;

@@ -11,6 +11,7 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { updateTourList, getLocationForTourList, getCategoryForTourList } from "@/services/guide/guideTourList";
+import { IAvailability } from "@/types/availability.interface";
 import { ITourList } from "@/types/tourList.interface";
 import Image from "next/image";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -34,20 +35,32 @@ const TourListUpdateDialog = ({
     const [state, formAction, isPending] = useActionState(updateTourList, null);
     const hasShownToast = useRef(false);
     const [locations, setLocations] = useState<any[]>([]);
-    const [existingImages, setExistingImages] = useState<string[]>(() => tourLists?.images ?? []);
-    // const [category, setCategory] = useState<any[]>([]);
-   const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+    const [existingImages, setExistingImages] = useState<string[]>(() =>
+        tourLists?.images ?? []
+    );
+    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(() =>
+        tourLists?.categories?.map(cat => cat.categoryId) ?? []
+    );
+    const [selectedCity, setSelectedCity] = useState<string>(
+        tourLists?.city ?? ""
+    );
+    const [availabilityDialogOpen, setAvailabilityDialogOpen] = useState(false);
+    const [availabilities, setAvailabilities] = useState<IAvailability[]>(tourLists?.guide?.profile?.availabilities ?? []);
+
+    // Add new availability temp state
+    const [newAvailability, setNewAvailability] = useState<{ startAt: string, endAt: string }>({ startAt: '', endAt: '' });
+
+
+
+
 
     useEffect(() => {
         if (!state) return;
         if (state?.success && !hasShownToast.current) {
             toast.success(state.message || "Tour list updated successfully");
-            // if (formRef.current) {
-            //     formRef.current.reset();
-            // }
-            hasShownToast.current = true; // Set the flag
+            hasShownToast.current = true;
             onSuccess();
             onClose();
         } else if (state?.message && !state.success) {
@@ -65,9 +78,6 @@ const TourListUpdateDialog = ({
         fetchLocations();
     }, []);
 
- 
-
-
     useEffect(() => {
         async function fetchCategories() {
             const res = await getCategoryForTourList();
@@ -77,23 +87,20 @@ const TourListUpdateDialog = ({
         }
         fetchCategories();
     }, []);
+
+
+
+
+
     const handleDialogOpenChange = (isOpen: boolean) => {
-         if (isOpen && tourLists?.categories) {
-        setSelectedCategories(
-            tourLists.categories.map(cat => cat.id)
-        );
-    }
         if (!isOpen) {
-        hasShownToast.current = false;
-        onClose();
-    }
-    }
+            hasShownToast.current = false;
+            onClose();
+        }
+    };
 
     const handleClose = () => {
-        // formRef.current?.reset();
-        // setExistingImages([]);
-        hasShownToast.current = false; // Reset the flag
-        // setExistingImages(tourLists?.images || []);
+        hasShownToast.current = false;
         onClose();
     };
 
@@ -103,10 +110,14 @@ const TourListUpdateDialog = ({
 
     if (!tourLists) return null;
 
-    // console.log("Tour List Update", state, isPending);
-    // console.log("Tour List Update existingImages", existingImages);
+    console.log("Tour List Update", state, isPending);
+
     return (
-        <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+        <Dialog
+            key={tourLists.id}
+            open={open}
+            onOpenChange={handleDialogOpenChange}
+        >
             <DialogContent className="max-h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle>Update Tour</DialogTitle>
@@ -118,10 +129,8 @@ const TourListUpdateDialog = ({
                     className="space-y-4 overflow-y-auto flex flex-col flex-1 min-h-0"
                 >
                     <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
-                        {/* ✅ REQUIRED */}
                         <input type="hidden" name="tourId" value={tourLists.id} />
 
-                        {/* existing images */}
                         <input
                             type="hidden"
                             name="existingImages"
@@ -134,12 +143,6 @@ const TourListUpdateDialog = ({
                             <InputFieldError field="title" state={state} />
                         </Field>
 
-                        {/* <Field>
-                            <FieldLabel>City</FieldLabel>
-                            <Input name="city" defaultValue={tourLists.city} />
-                        </Field> */}
-
-                        {/* Categories as Dialog */}
                         <Field>
                             <div className="flex items-center justify-between mb-2">
                                 <FieldLabel>Categories</FieldLabel>
@@ -152,30 +155,28 @@ const TourListUpdateDialog = ({
                                 </Button>
                             </div>
 
-
                             <div className="flex gap-2 flex-wrap mb-2">
-                                {selectedCategories.length === 0 && (<p className="text-sm text-gray-500">No categories selected</p>
+                                {selectedCategories.length === 0 && (
+                                    <p className="text-sm text-gray-500">No categories selected</p>
                                 )}
-                                {selectedCategories.map(id => { // Use selectedCategories instead of category
-                                    const category = categories.find(cat => cat.id === id); // Use categories instead of category
+                                {selectedCategories.map(id => {
+                                    const category = categories.find(cat => cat.id === id);
                                     return (
                                         <span
                                             key={id}
-                                            className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded"                                        >
+                                            className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded"
+                                        >
                                             {category?.name}
-                                        </span>     
-                                    ) 
+                                        </span>
+                                    )
                                 })}
                             </div>
 
-
-                            {/* Hidden input to submit form */}
                             {selectedCategories.map(id => (
                                 <input key={id} type="hidden" name="categories" value={id} />
                             ))}
                             <InputFieldError field="categories" state={state} />
 
-                            {/* Category selection Dialog */}
                             <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
                                 <DialogContent className="max-h-64 overflow-y-auto">
                                     <DialogHeader>
@@ -217,36 +218,19 @@ const TourListUpdateDialog = ({
                                 </DialogContent>
                             </Dialog>
                         </Field>
-                        {/* Categories */}
-                        {/* <Field>
-                            
-                            <FieldLabel>Categories</FieldLabel>
-                            <select
-                                name="categories"
-                                multiple
-                                defaultValue={tourLists.categories?.map(cat => cat.id)}
-                                className="w-full border rounded p-2"
-                            >
-                                {category.map(cat => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </Field> */}
-                        {/* city */}
+
                         <Field>
                             <FieldLabel htmlFor="city">City</FieldLabel>
                             <select
                                 name="city"
-                                defaultValue={tourLists.city}
+                                value={selectedCity}
+                                onChange={(e) => setSelectedCity(e.target.value)}
                                 className="border text-black rounded p-2 w-full"
                             >
                                 <option value="">Select city</option>
-
                                 {locations.map((loc) => (
                                     <option key={loc.id} value={loc.city}>
-                                        {loc.city}
+                                        {loc.city} - {loc.country}
                                     </option>
                                 ))}
                             </select>
@@ -278,6 +262,26 @@ const TourListUpdateDialog = ({
                                 defaultValue={tourLists.maxPeople}
                             />
                         </Field>
+                        {/* availability (read-only) */}
+                        <Field>
+                            <FieldLabel>Availabilities (Not editable)</FieldLabel>
+                            <div className="flex flex-col gap-2">
+                                {availabilities.length === 0 && (
+                                    <p className="text-gray-500 text-sm">No availabilities set</p>
+                                )}
+                                {availabilities.map((a) => (
+                                    <div
+                                        key={a.id}
+                                        className="flex items-center justify-between p-2 border rounded-md bg-gray-50 cursor-default"
+                                    >
+                                        <span className="text-gray-800">
+                                            {new Date(a.startAt).toLocaleDateString()} -{" "}
+                                            {new Date(a.endAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </Field>
 
                         <Field>
                             <FieldLabel>Meeting Point</FieldLabel>
@@ -296,7 +300,6 @@ const TourListUpdateDialog = ({
                             />
                         </Field>
 
-                        {/* existing images preview */}
                         {existingImages.length > 0 && (
                             <div className="grid grid-cols-3 gap-2">
                                 {existingImages.map((img) => (
@@ -317,9 +320,7 @@ const TourListUpdateDialog = ({
                                         </button>
                                     </div>
                                 ))}
-
                             </div>
-
                         )}
 
                         <Field>

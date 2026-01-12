@@ -10,13 +10,13 @@ import { useState } from "react";
 import BookTourDialog from "./BookAvailableTourDialog";
 
 const ExploreToursDetails = ({ tourData }: { tourData: ITourList }) => {
-const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
+    // const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
     const images =
         Array.isArray(tourData.images)
             ? tourData.images.filter(img => img && img.trim() !== "")
             : [];
     console.log("details Tours", tourData)
-    
+
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
             {/* ================= IMAGE GALLERY ================= */}
@@ -111,10 +111,25 @@ const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
                         </div>
                     )}
 
+                    {/* Availability */}
+                    {tourData?.availabilities?.length ? (
+                        <div className="space-y-2">
+                            <h3 className="font-semibold">Available Dates</h3>
+
+                            {tourData?.availabilities.map(a => (
+                                <div key={a.id} className="text-sm text-gray-700 flex-wrap flex">
+                                    <span className="bg-gray-50 p-1 rounded-md">{new Date(a.startAt).toLocaleDateString()} -{" "}
+                                    {new Date(a.endAt).toLocaleDateString()}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : null}
+
+
                     {/* ===== TOUR Category ===== */}
-                    {tourData.categories && tourData.categories.length > 0 && (
+                    { tourData?.categories?.length ? (
                         <div className="flex flex-wrap gap-2">
-                            {tourData.categories.map(cat => (
+                            {tourData?.categories.map(cat => (
                                 <span
                                     key={cat.id}
                                     className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full"
@@ -123,7 +138,7 @@ const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
                                 </span>
                             ))}
                         </div>
-                    )}
+                    ) : null}
 
 
                     {/* ===== GUIDE INFO ===== */}
@@ -153,16 +168,13 @@ const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
                     </div>
 
                     <div className="space-y-2 flex flex-col ">
-                        <Button onClick={() => setShowAvailabilityModal(true)} className="flex-1">
-                        Book Tour
-                    </Button>
+                        <Button 
+                        // onClick={() => setShowAvailabilityModal(true)}
+                         className="flex-1">
+                            Book Tour
+                        </Button>
                     </div>
                 </div>
-                <BookTourDialog
-                    tour={tourData}
-                    isOpen={showAvailabilityModal}
-                    onClose={() => setShowAvailabilityModal(false)}
-                />
             </div>
         </div>
     );

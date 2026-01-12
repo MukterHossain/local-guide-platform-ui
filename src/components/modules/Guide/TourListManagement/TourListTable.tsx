@@ -71,6 +71,8 @@ const TourListTable = ({ tourLists }: AvailabilityTableProps) => {
       toast.error(result.message || "Failed to delete Tour List");
     }
   };
+
+  console.log("editingTourList", editingTourList)
   return (
     <>
       <ManagementTable
